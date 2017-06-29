@@ -3,13 +3,25 @@
 //
 
 #include "Enigma.h"
+#include "Exceptions.h"
 
+/**
+ * namespaces in use
+ */
 using namespace mtm::escaperoom;
+
+/**
+ * classes in use
+ */
 using std::string;
+//TODO ?? using mtm::escaperoom::Enigma;
 
 Enigma::Enigma(const std::string &name, const Difficulty &difficulty,
                const int &numOfElements) {
-    //TODO nullptr parameter
+    //TODO nullptr parameter??
+    if (&numOfElements < 0) {
+        throw EnigmaIllegalSizeParamException();
+    }
     this->name = name;
     this->difficulty = difficulty;
     this->numOfElements = numOfElements;
@@ -17,33 +29,33 @@ Enigma::Enigma(const std::string &name, const Difficulty &difficulty,
 
 
 bool Enigma::operator==(const Enigma &enigma) const {
-    //TODO nullptr parameter
-    if (this->name != enigma.name) {
+    //TODO nullptr parameter??
+    if (name != enigma.name) {
         return false;
     }
 
-    return (this->difficulty == enigma.difficulty);
+    return (difficulty == enigma.difficulty);
 }
 
 bool Enigma::operator!=(const Enigma &enigma) const {
-    //TODO nullptr parameter
-    if (this->name == enigma.name) {
+    //TODO nullptr parameter??
+    if (name == enigma.name) {
         return false;
     }
 
-    return (this->difficulty != enigma.difficulty);
+    return (difficulty != enigma.difficulty);
 }
 
 bool Enigma::operator<(const Enigma &enigma) const {
-    return ((int) this->difficulty < (int) enigma.difficulty);
+    return ((int) difficulty < (int) enigma.difficulty);
 }
 
 bool Enigma::operator>(const Enigma &enigma) const {
-    return ((int) this->difficulty > (int) enigma.difficulty);
+    return ((int) difficulty > (int) enigma.difficulty);
 }
 
 bool Enigma::areEqualyComplex(const Enigma &enigma) const {
-    if ((int) this->difficulty != (int) enigma.difficulty) {
+    if ((int) difficulty != (int) enigma.difficulty) {
         return false;
     }
 
