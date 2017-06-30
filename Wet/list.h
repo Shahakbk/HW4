@@ -136,9 +136,14 @@ List::~List() {
 void List::pushFirst(const Enigma &enigma) {
 
     Node *new_node = new Node(enigma);
-    head->previous = new_node;
     new_node->next = head;
     head = new_node;
+    if (nullptr != head->next) {
+        head->next->previous = new_node;
+    }
+    if (nullptr == last_node) {
+        last_node = head;
+    }
 }
 
 void List::pushLast(const Enigma &enigma) {

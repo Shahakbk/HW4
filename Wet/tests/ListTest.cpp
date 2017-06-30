@@ -17,8 +17,14 @@ int main() {
     Enigma enigma2("MySecondEnigma", EASY_ENIGMA, 2);
     Enigma enigma3("MyThirdEnigma", MEDIUM_ENIGMA, 1);
     Enigma enigma4("MyFourthEnigma", MEDIUM_ENIGMA, 2);
-   // List list->list->
+    List list;
+    list.pushLast(enigma3);
+    list.pushFirst(enigma2);
+    list.pushLast(enigma4);
+    list.pushFirst(enigma1);
 
 
 
+
+    return 0;
 }
