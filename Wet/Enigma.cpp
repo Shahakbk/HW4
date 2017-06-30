@@ -27,7 +27,6 @@ Enigma::Enigma(const std::string &name, const Difficulty &difficulty,
     this->numOfElements = numOfElements;
 }
 
-
 bool Enigma::operator==(const Enigma &enigma) const {
     //TODO nullptr parameter??
     if (name != enigma.name) {
