@@ -7,6 +7,9 @@
 
 #include "Enigma.h"
 
+namespace mtm{
+namespace list{
+
 
 /*--------------------------------------------------------------------------*//*
  *                          _   __          __
@@ -45,8 +48,8 @@ private:
 // declaring constructor for Node with initialization list
 Node::Node(const Enigma data) :
         data(data),
-        previous(nullptr),
-        next(nullptr) {}
+        next(nullptr),
+        previous(nullptr) {}
 
 //TODO probably there's no need for this func
 /*
@@ -163,7 +166,8 @@ void List::pushLast(const Enigma &enigma) {
 
 
 
-class List<Enigma>::Iterator {
+//class List<Enigma>::Iterator {
+class List::Iterator {
     const List list;
     int index;
 
@@ -211,5 +215,10 @@ public:
 
 };
 */
+
+
+
+} // end of namespace eascaperoom
+} // end of namespace list
 
 #endif //HW4_LIST_H
