@@ -31,6 +31,49 @@ EscapeRoomWrapper::EscapeRoomWrapper(const EscapeRoomWrapper &room) :
     }
 }
 
+void EscapeRoomWrapper::addEnigma(const Enigma &enigma) {
+    enigmas.push_back(enigma);
+}
+
+void EscapeRoomWrapper::removeEnigma(const Enigma &enigma) {
+    if (0 == enigmas.size()) {
+        throw EscapeRoomNoEnigmasException();
+    }
+    // assuming there's no multiplicity of enigmas in a room
+    // TODO ^make sure^
+    for (vector<Enigma>::iterator i = enigmas.begin(); i != enigmas.end(); ++i){
+        if (*i == enigma) {
+            enigmas.erase(i);
+            return;
+        }
+    }
+
+    throw EscapeRoomEnigmaNotFoundException();
+}
+
+Enigma EscapeRoomWrapper::getHardestEnigma() {
+    if (0 == enigmas.size()) {
+        throw EscapeRoomNoEnigmasException();
+    }
+
+    Enigma max_enigma = *enigmas.begin();
+    for (vector<Enigma>::iterator i = enigmas.begin(); i != enigmas.end(); ++i){
+        if (*i > max_enigma) {
+            max_enigma = *i;
+        }
+    }
+
+    return max_enigma;
+}
+
+vector<Enigma>& EscapeRoomWrapper::getAllEnigmas() {
+    vector<Enigma> *result = new vector<Enigma>(enigmas);
+    return *result;
+}
+void EscapeRoomWrapper::check(Enigma enigma) {
+    enigmas.push_back(enigma);
+}
+
 EscapeRoomWrapper &EscapeRoomWrapper::operator=(const EscapeRoomWrapper &room) {
     EscapeRoom tmp = escapeRoomCopy(room.escape_room);
     escapeRoomDestroy(escape_room);

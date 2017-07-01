@@ -16,15 +16,43 @@ using namespace mtm::escaperoom;
 using std::string;
 //TODO ?? using mtm::escaperoom::Enigma;
 
-Enigma::Enigma(const std::string &name, const Difficulty &difficulty,
-               const int &numOfElements) {
+Enigma::Enigma(const std::string& name, const Difficulty& difficulty,
+               const int& numOfElements, const set<string> &elements) {
+
     //TODO nullptr parameter??
-    if (&numOfElements < 0) {
-        throw EnigmaIllegalSizeParamException();
+    int num = (int)elements.size();
+    if (num != numOfElements) {
+        //throw EnigmaIllegalSizeParamException();
     }
+    this->elements = elements;
     this->name = name;
     this->difficulty = difficulty;
     this->numOfElements = numOfElements;
+}
+
+Enigma::Enigma(const std::string& name, const Difficulty& difficulty) {
+    this->name = name;
+    this->difficulty = difficulty;
+    this->numOfElements = 0;
+    // elements is initialized as an empty set by default
+}
+
+void Enigma::addElement(const string& element) {
+    elements.insert(element);
+    numOfElements++;
+}
+
+void Enigma::removeElement(const string& element) {
+
+    if (0 == numOfElements) {
+        throw EnigmaNoElementsException();
+    }
+
+    // erase returns the number of elements removed
+    if (0 == elements.erase(element)) {
+        throw EnigmaElementNotFoundException();
+    }
+    numOfElements--;
 }
 
 bool Enigma::operator==(const Enigma &enigma) const {
