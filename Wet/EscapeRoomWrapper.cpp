@@ -69,11 +69,6 @@ EscapeRoomWrapper::~EscapeRoomWrapper() {
     escapeRoomDestroy(escape_room);
 }
 
-std::ostream& operator<<(std::ostream& output, const EscapeRoomWrapper& room){
-    return output << getName() << "(" << getMaxTime() << "/" << level() <<
-                  "/" << getMaxParticipants() << ")";
-}
-
 std::string EscapeRoomWrapper::getName() const {
     return roomGetName(escape_room);
 }
@@ -88,4 +83,11 @@ int EscapeRoomWrapper::getMaxTime() const {
 
 int EscapeRoomWrapper::getMaxParticipants() const {
     return roomGetMaxParticipants(escape_room);
+}
+
+std::ostream& mtm::escaperoom::operator<<(std::ostream& output,
+                                          const EscapeRoomWrapper& room){
+    output << room.getName() << " (" << room.getMaxTime() << " /" <<
+           room.level() << " /" << room.getMaxParticipants() << ")";
+    return output;
 }
