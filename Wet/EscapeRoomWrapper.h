@@ -8,8 +8,12 @@
 
 #include <string>
 #include <iostream>
-#include "EscapeRoom.h"
+#include <vector>
 
+#include "EscapeRoom.h"
+#include "Enigma.h"
+
+using std::vector;
 
 namespace mtm{
     namespace escaperoom {
@@ -17,6 +21,7 @@ namespace mtm{
         class EscapeRoomWrapper{
 
             EscapeRoom escape_room;
+            vector<Enigma> enigmas;
 
         public:
             // Constructs a new Escape Room with the specified data.
@@ -42,6 +47,34 @@ namespace mtm{
             //@param room : the room to be copied.
             //@throws EscapeRoomMemoryProblemException in case of creation failure.
             EscapeRoomWrapper(const EscapeRoomWrapper& room);
+
+            /**
+             * adds an enigma to the room
+             * @param enigma - the enigma to add into the enigmas vector within
+             * the room
+             */
+            void addEnigma(const Enigma& enigma);
+
+            /**
+             * removes an enigma from the room
+             * @param enigma - the enigma to find in the room and remove
+             */
+            void removeEnigma(const Enigma& enigma);
+
+            /**
+             * find the hardest enigma in the room
+             * @return - a copy of the hardest enigma (the first one in the
+             * vector if there are a few)
+             */
+            Enigma getHardestEnigma();
+
+            /**
+             * returns all of the enigmas in the room
+             * @return - a copy of the enigmas vector of the room
+             */
+            vector<Enigma>& getAllEnigmas();
+            void check(Enigma enigma);
+
 
             //assignment operator
             //
