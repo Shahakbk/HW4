@@ -3,24 +3,22 @@
 //
 
 #include <iostream>
+#include "../List.h"
 
-#include "../list.h"
-
-using namespace mtm::escaperoom;
-using namespace mtm::list;
+using namespace mtm;
 using std::cout;
 using std::endl;
 
 int main() {
-    cout << "Starting temporary list tests:" << endl;
-    list list;
+    cout << "Starting temporary List tests:" << endl;
+    List list;
     list.insert(1);
     list.insert(2);
     list.insert(3);
     list.insert(4);
     list.insert(5);
 
-    list copy_ctor = list;
+    List copy_ctor = list;
 
     if(list.getSize() != copy_ctor.getSize()){
         cout << "size problem with copy C'tor" << endl;
@@ -30,12 +28,12 @@ int main() {
         cout << "copy c'tor problem" << endl;
     }
 
-    list::Iterator it = list.begin();
+    List::Iterator it = list.begin();
     if(*it != 1){
         cout << "something wrong with the iterator" << endl;
     }
 
-    list assignment_list;
+    List assignment_list;
     assignment_list = copy_ctor;
 
     if(list != copy_ctor){
@@ -67,6 +65,25 @@ int main() {
     ++it;
     if(*it != 10){
         cout << "insert in the middle problem" << endl;
+    }
+
+/*    it = list.end();
+    if (*it != nullptr){
+        cout << "list end problem" << endl;
+    }*/
+
+    it = list.end();
+    it--;
+    if (*it != 5){
+        cout << "-- problem when iterator is at end" << endl;
+    }
+
+    it = list.end();
+    list.insert(6, it);
+    it = list.end();
+    it--;
+    if (*it != 6){
+        cout << "insert on end problem" << endl;
     }
 
     return 0;
