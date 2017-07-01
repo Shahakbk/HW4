@@ -10,6 +10,8 @@
 using namespace mtm::ListExceptions;
 
 namespace mtm {
+
+    template <class T>
     class List {
         class Node;
         Node *head;
@@ -21,50 +23,52 @@ namespace mtm {
         List();
         List(const List &list);
         ~List();
-        List &operator=(const List &list);
+        List<T> &operator=(const List<T> &list);
         Iterator begin() const;
         Iterator end() const;
-        void insert(const int& data, Iterator iterator);
-        void insert(const int& data);
-        void remove(Iterator iterator);
-        bool operator==(const List& list) const;
-        bool operator!=(const List& list) const;
+        void insert(const T& data, Iterator iterator);
+        void insert(const T& data);
+        void remove(List::Iterator iterator);
+        bool operator==(const List<T>& list) const;
+        bool operator!=(const List<T>& list) const;
         template <class Predicate>
-        Iterator find(const Predicate& predicate) const;
+        List::Iterator find(const Predicate& predicate) const;
         template <class Compare>
         void sort(const Compare& compare);
         int getSize() const;
     };
 
-    class List::Iterator {
-        const List* list;
+    template <class T>
+    class List<T>::Iterator {
+        const List<T>* list;
         Node *cur_node;
-        Iterator(const List* list, Node *cur_node);
+        Iterator(const List<T>* list, Node *cur_node);
 
-        friend class List;
+        friend class List<T>;
 
     public:
         Iterator(const Iterator &) = default;
         Iterator &operator=(const Iterator &) = default;
         ~Iterator() = default;
-        const int &operator*() const;
+        const T &operator*() const;
         Iterator &operator++();
         Iterator operator++(int);
         Iterator &operator--();
         Iterator operator--(int);
-        bool operator==(const Iterator iterator) const;
-        bool operator!=(const Iterator iterator) const;
+        bool operator==(const List<T>::Iterator& iterator) const;
+        bool operator!=(const List<T>::Iterator& iterator) const;
     };
 
-    class List::Node {
-        int data;
+    template <class T>
+    class List<T>::Node {
+        T data;
         Node *next;
         Node *previous;
 
-        friend class List;
-        friend class Iterator;
+        friend class List<T>;
+        friend class List<T>::Iterator;
     public:
-        Node(const int data);
+        Node(const T data);
         ~Node() = default;
     };
 
@@ -77,15 +81,18 @@ namespace mtm {
  *
 *//*--------------------------------------------------------------------------*/
 
-    List::List() : head(nullptr), last(nullptr), size(0) {}
+    template <class T>
+    List<T>::List() : head(nullptr), last(nullptr), size(0) {}
 
-    List::List(const List &list) : head(nullptr), last(nullptr), size(0) {
-        for (Iterator it = list.begin(); it != list.end(); ++it) {
+    template <class T>
+    List<T>::List(const List<T> &list) : head(nullptr), last(nullptr), size(0) {
+        for (List<T>::Iterator it = list.begin(); it != list.end(); ++it) {
             insert(it.cur_node->data);
         }
     }
 
-    List::~List() {
+    template <class T>
+    List<T>::~List() {
         Iterator it = begin();
         while (it != end()){
             remove(it);
@@ -93,8 +100,9 @@ namespace mtm {
         }
     }
 
-    List &List::operator=(const List &list) {
-        List tmp = list;
+    template <class T>
+    List<T> &List<T>::operator=(const List<T> &list) {
+        List<T> tmp = list;
 
         Iterator it_left = begin();
         while (it_left != end()){
@@ -108,15 +116,18 @@ namespace mtm {
         return *this;
     }
 
-    List::Iterator List::begin() const {
+    template <class T>
+    typename Iterator List<T>::begin() const {
         return Iterator(this, head);
     }
 
-    List::Iterator List::end() const {
+    template <class T>
+    typename Iterator List<T>::end() const {
         return ++Iterator(this, last);
     }
 
-    void List::insert(const int &data, List::Iterator iterator) {
+    template <class T>
+    void List<T>::insert(const T &data, Iterator iterator) {
         if(iterator.list != this){
             throw ElementNotFound();
         }
@@ -149,11 +160,13 @@ namespace mtm {
         prev_node->next = new_node;
     }
 
-    void List::insert(const int &data) {
+    template <class T>
+    void List<T>::insert(const T &data) {
         insert(data, end());
     }
 
-    void List::remove(Iterator iterator){
+    template <class T>
+    void List<T>::remove(List::Iterator iterator){
         if(iterator.list != this || iterator == end() || size == 0){
             throw ElementNotFound();
         }
@@ -164,8 +177,8 @@ namespace mtm {
             last = nullptr;
             return;
         }
-        Node *prev_node = iterator.cur_node->previous;
-        Node *next_node = iterator.cur_node->next;
+        List<T>::Node *prev_node = iterator.cur_node->previous;
+        List<T>::Node *next_node = iterator.cur_node->next;
 
         if (iterator.cur_node == head) {
             next_node->previous = nullptr;
@@ -184,11 +197,13 @@ namespace mtm {
         delete(iterator.cur_node);
     }
 
-    int List::getSize() const{
+    template <class T>
+    int List<T>::getSize() const{
         return size;
     }
 
-    bool List::operator==(const List &list) const {
+    template <class T>
+    bool List<T>::operator==(const List<T> &list) const {
         if (size != list.size){
             return false;
         }
@@ -204,13 +219,15 @@ namespace mtm {
         return true;
     }
 
-    bool List::operator!=(const List &list) const {
+    template <class T>
+    bool List<T>::operator!=(const List<T> &list) const {
         return !(*this == list);
     }
 
 
+    template <class T>
     template <class Predicate>
-    List::Iterator List::find(const Predicate& predicate) const{
+    typename List<T>::Iterator List<T>::find(const Predicate& predicate) const {
         Iterator it = this->begin();
         for( ; it != this->end(); ++it){
             if(predicate(*it) == true){
@@ -220,13 +237,14 @@ namespace mtm {
         return it;
     }
 
-    template <class Compare>
-    void List::sort(const Compare& compare) {
+    //TODO: assuming the T has assignment func might be a problem
+    template <class Compare, class T>
+    void List<T>::sort(const Compare& compare) {
         for (Iterator i = begin(); i != end() ; ++i) {
             Iterator j = i;
             for (++j; j != end(); ++j) {
                 if (!compare(i.cur_node->data, j.cur_node->data)){
-                    int tmp_data = i.cur_node->data;
+                    T tmp_data = i.cur_node->data;
                     i.cur_node->data = j.cur_node->data;
                     j.cur_node->data = tmp_data;
                 }
@@ -243,9 +261,9 @@ namespace mtm {
  *
 *//*--------------------------------------------------------------------------*/
 
-    List::Node::Node(const int data) : data(data),
-                                       next(nullptr),
-                                       previous(nullptr) {}
+    template <class T>
+    List<T>::Node::Node(const T data) : data(data), next(nullptr),
+                                        previous(nullptr) {}
 
 /*--------------------------------------------------------------------------*//*
  *                       ____ __                   __
@@ -256,18 +274,21 @@ namespace mtm {
  *
 *//*--------------------------------------------------------------------------*/
 
-    List::Iterator::Iterator(const List *list, List::Node *cur_node) :
+    template <class T>
+    List<T>::Iterator::Iterator(const List<T>* list, Node *cur_node) :
                                                 list(list),
                                                 cur_node(cur_node) {}
 
-    const int &List::Iterator::operator*() const {
+    template <class T>
+    const T& List<T>::Iterator::operator*() const {
         if (cur_node == nullptr){
             throw ElementNotFound();
         }
         return cur_node->data;
     }
 
-    List::Iterator &List::Iterator::operator++() {
+    template <class T>
+    typename List<T>::Iterator& List<T>::Iterator::operator++() {
         if(this->cur_node == nullptr){
             return *this;
         }
@@ -275,13 +296,15 @@ namespace mtm {
         return *this;
     }
 
-    List::Iterator List::Iterator::operator++(int) {
+    template <class T>
+    typename List<T>::Iterator List<T>::Iterator::operator++(int) {
         Iterator it = *this;
         ++*this;
         return it;
     }
 
-    List::Iterator &List::Iterator::operator--() {
+    template <class T>
+    typename List<T>::Iterator& List<T>::Iterator::operator--() {
         if(cur_node == nullptr){
             cur_node = list->last;
             return *this;
@@ -290,17 +313,20 @@ namespace mtm {
         return *this;
     }
 
-    List::Iterator List::Iterator::operator--(int) {
+    template <class T>
+    typename List<T>::Iterator List<T>::Iterator::operator--(int) {
         Iterator it = *this;
         --*this;
         return it;
     }
 
-    bool List::Iterator::operator==(const List::Iterator iterator) const {
-        return list == iterator.list && cur_node == iterator.cur_node;
+    template <class T>
+    bool List<T>::Iterator::operator==(const List<T>::Iterator& iterator) const{
+        return (list == iterator.list && cur_node == iterator.cur_node);
     }
 
-    bool List::Iterator::operator!=(const List::Iterator iterator) const {
+    template <class T>
+    bool List::Iterator::operator!=(const List<T>::Iterator& iterator) const {
         return !(*this == iterator);
     }
 
