@@ -1,68 +1,11 @@
 //
-// Created by Shahak on 29/06/2017.
+// Created by adire on 01-Jul-17.
 //
-
 #ifndef HW4_LIST_H
 #define HW4_LIST_H
 
 #include "Enigma.h"
-
-namespace mtm{
-namespace list{
-
-
-/*--------------------------------------------------------------------------*//*
- *                          _   __          __
- *                         / | / /___  ____/ /__
- *                        /  |/ / __ \/ __  / _ \
- *                       / /|  / /_/ / /_/ /  __/
- *                      /_/ |_/\____/\__,_/\___/
- *
-*//*--------------------------------------------------------------------------*/
-
-
-using mtm::escaperoom::Enigma;
-
-//template <class T>
-class Node {
-public:
-    //Node(const T data);
-    Node(const Enigma data); // Node creator
-//    Node(const Node &toCopy); // Node copy constructor
-    ~Node() = default; // Node destructor
-    //TODO make sure it's ok ^
-
-private:
-
-    //  T data; // the type the list will hold
-    Enigma data;
-    Node *next; // the next node in the list
-    Node *previous; // the previous node in the list
-
-
-    //friend class List<T>; // so the list can access the nodes
-    friend class List;
-    friend class Iterator; // so the iterator can access the nodes
-};
-
-// declaring constructor for Node with initialization list
-Node::Node(const Enigma data) :
-        data(data),
-        next(nullptr),
-        previous(nullptr) {}
-
-//TODO probably there's no need for this func
-/*
-// copy constructor for node
-Node::Node(const Node &toCopy) :
-        data(copyNode(toCopy)),
-        previous(nullptr),
-        next(nullptr) {
-
-    //TODO incomplete
-
-}
-*/
+#include "Exceptions.h"
 
 /*--------------------------------------------------------------------------*//*
  *                          __    _      __
@@ -73,91 +16,213 @@ Node::Node(const Node &toCopy) :
  *
 *//*--------------------------------------------------------------------------*/
 
-//template <class T>
-class List {
-public:
-    class Iterator; // internal iterator of the list
+using namespace mtm::ListExceptions;
 
-    List(); // creator for the list
-    List(const List &list); // copy constructor
-    //List(const List<T> &list); // copy constructor
-    ~List(); // list destructor
-    List &operator=(const List &list); // assignment operator
-    //List<T> &operator=(const List<T> &list); // assignment operator
+namespace mtm {
+    namespace list {
 
-    Iterator begin() const; // get an iterator to the beginning
-    Iterator end() const; // get an iterator to the end
+        class list {
+            //declaration of class Node
+            class Node {
+                int data;
+                Node *next;
+                Node *previous;
 
-    //void pushLast(const T &t);
-    void pushLast(const Enigma &enigma);
-    //void pushFirst(const T &t);
-    void pushFirst(const Enigma &enigma);
+                friend class list;
+                friend class Iterator;
+            public:
+                Node(const int data);
+                ~Node() = default;
+            };
 
-private:
-//TODO protected?
-    Node *head; // the head of the list
-    Node *last_node; // the last node in the list
-};
+        private:
+            //private fields of list
+            Node *head;
+            Node *last;
+            int size;
 
+        public:
+            //declaration of class Iterator
+            class Iterator {
+                const list* list;
+                Node *cur_node;
+                Iterator(const list* list, Node *cur_node);
 
-// empty creator for the list
-//template <class T>
-//List<T>::List():
-List::List() :
-        head(nullptr),
-        last_node(nullptr) {}
-//TODO create iterator??
+                friend class list;
 
-// copy constructor for the list
-//template <class T>
-//List<T>::List(const List &list):
-List::List(const List &list) :
-        head(nullptr),
-        last_node(nullptr) {
+            public:
+                Iterator(const Iterator &) = default;
+                Iterator &operator=(const Iterator &) = default;
+                ~Iterator() = default;
+                const int &operator*() const;
+                Iterator &operator++();
+                Iterator operator++(int);
+                Iterator &operator--();
+                Iterator operator--(int);
+                bool operator==(const Iterator iterator) const;
+                bool operator!=(const Iterator iterator) const;
+            };
+            //public fields of list
+            list();
+            list(const list &list);
+            ~list();
+            list &operator=(const list &list);
+            Iterator begin() const;
+            Iterator end() const;
+            void insert(const int& data, Iterator iterator);
+            void insert(const int& data);
+            void remove(Iterator iterator);
+            bool operator==(const list& list) const;
+            bool operator!=(const list& list) const;
+            //TODO: >>
+//            Iterator find(const Predicate& predicate) const;
+//            void sort(const Compare& compare);
+            int getSize() const;
+        };
 
-    for (Node *node_iterator = list.head;
-         node_iterator != nullptr;
-         node_iterator = node_iterator->next) {
-        pushLast(node_iterator->data);
-    }
-}
+        list::list() : head(nullptr), last(nullptr), size(0) {}
 
-List::~List() {
-    Node *node_iterator = head;
-    while (nullptr != node_iterator) {
-        Node *tmp_node = node_iterator->next;
-        delete(node_iterator);
-        node_iterator = tmp_node;
-    }
-    //TODO delete iterator??
-}
+        list::list(const list &list) : head(nullptr), last(nullptr), size(0) {
+            for (Iterator it = list.begin(); it != list.end(); ++it) {
+                insert(it.cur_node->data);
+            }
+        }
 
-//void List<T>::pushFirst(const T &t) {
-void List::pushFirst(const Enigma &enigma) {
+        list::~list() {
+            Iterator it = begin();
+            while (it != end()){
+                remove(it);
+                it = begin();
+            }
+        }
 
-    Node *new_node = new Node(enigma);
-    new_node->next = head;
-    head = new_node;
-    if (nullptr != head->next) {
-        head->next->previous = new_node;
-    }
-    if (nullptr == last_node) {
-        last_node = head;
-    }
-}
+        list &list::operator=(const list &list) {
+            list tmp = list;
 
-void List::pushLast(const Enigma &enigma) {
+            Iterator it_left = begin();
+            while (it_left != end()){
+                remove(it_left);
+                it_left = begin();
+            }
 
-    if (nullptr == head) {
-        pushFirst(enigma);
-        return;
-    }
-    Node *new_node = new Node(enigma);
-    last_node->next = new_node;
-    new_node->previous = last_node;
-    last_node = new_node;
-    last_node->next = nullptr;
-}
+            for (Iterator it = list.begin(); it != list.end(); ++it) {
+                insert(it.cur_node->data);
+            }
+            return *this;
+        }
+
+        list::Iterator list::begin() const {
+            return Iterator(this, head);
+        }
+
+        list::Iterator list::end() const {
+            return ++Iterator(this, last);
+        }
+
+        void list::insert(const int &data, list::Iterator iterator) {
+            if(iterator.list != this){
+                throw ElementNotFound();
+            }
+            Node *new_node = new Node(data);
+            size++;
+            if(size == 1){
+                head = new_node;
+                last = new_node;
+                return;
+            }
+            Node *next_node = iterator.cur_node;
+            if (next_node == nullptr) {
+                new_node->previous = last;
+                new_node->next = last->next;
+                last->next = new_node;
+                last = new_node;
+                return;
+            }
+            Node *prev_node = iterator.cur_node->previous;
+            if (prev_node == nullptr) {
+                new_node->next = head;
+                new_node->previous = nullptr;
+                head->previous = new_node;
+                head = new_node;
+                return;
+            }
+            new_node->next = next_node;
+            new_node->previous = prev_node;
+            next_node->previous = new_node;
+            prev_node->next = new_node;
+        }
+
+        void list::insert(const int &data) {
+            insert(data, end());
+        }
+
+        void list::remove(Iterator iterator){
+            if(iterator.list != this || iterator == end() || size == 0){
+                throw ElementNotFound();
+            }
+            size--;
+            if(size == 0){
+                delete(iterator.cur_node);
+                head = nullptr;
+                last = nullptr;
+                return;
+            }
+            Node *prev_node = iterator.cur_node->previous;
+            Node *next_node = iterator.cur_node->next;
+
+            if (iterator.cur_node == head) {
+                next_node->previous = nullptr;
+                delete(iterator.cur_node);
+                head = next_node;
+                return;
+            }
+            if (iterator.cur_node == last) {
+                prev_node->next = nullptr;
+                delete(iterator.cur_node);
+                last = prev_node;
+                return;
+            }
+            next_node->previous = prev_node;
+            prev_node->next = next_node;
+            delete(iterator.cur_node);
+        }
+
+        int list::getSize() const{
+            return size;
+        }
+
+        bool list::operator==(const list &list) const {
+            if (size != list.size){
+                return false;
+            }
+
+            Iterator it_left = begin();
+            Iterator it_right = list.begin();
+
+            for (; it_left != end(); ++it_left, ++it_right) {
+                if (it_left.cur_node->data != it_right.cur_node->data){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        bool list::operator!=(const list &list) const {
+            return !(*this == list);
+        }
+
+/*--------------------------------------------------------------------------*//*
+ *                          _   __          __
+ *                         / | / /___  ____/ /__
+ *                        /  |/ / __ \/ __  / _ \
+ *                       / /|  / /_/ / /_/ /  __/
+ *                      /_/ |_/\____/\__,_/\___/
+ *
+*//*--------------------------------------------------------------------------*/
+
+        list::Node::Node(const int data) : data(data),
+                                           next(nullptr),
+                                           previous(nullptr) {}
 
 /*--------------------------------------------------------------------------*//*
  *                       ____ __                   __
@@ -168,62 +233,51 @@ void List::pushLast(const Enigma &enigma) {
  *
 *//*--------------------------------------------------------------------------*/
 
+        list::Iterator::Iterator(const list *list, list::Node *cur_node) :
+                                                            list(list),
+                                                     cur_node(cur_node) {}
 
+        const int &list::Iterator::operator*() const {
+            if (cur_node == nullptr){
+                throw ElementNotFound();
+            }
+            return cur_node->data;
+        }
 
+        list::Iterator &list::Iterator::operator++() {
+            if(this->cur_node == nullptr){
+                return *this;
+            }
+            cur_node = cur_node->next;
+            return *this;
+        }
 
-//class List<Enigma>::Iterator {
-class List::Iterator {
-    const List list;
-    int index;
+        list::Iterator list::Iterator::operator++(int) {
+            Iterator it = *this;
+            ++*this;
+            return it;
+        }
 
-    Iterator(const List list, int index);
+        list::Iterator &list::Iterator::operator--() {
+            cur_node = cur_node->previous;
+            return *this;
+        }
 
-    friend class List;
+        list::Iterator list::Iterator::operator--(int) {
+            Iterator it = *this;
+            --*this;
+            return it;
+        }
 
-public:
-    const Enigma &operator*() const;
+        bool list::Iterator::operator==(const list::Iterator iterator) const {
+            return list == iterator.list && cur_node == iterator.cur_node;
+        }
 
-    Iterator &operator++(); // ++Iterator
-    Iterator operator++(int); // Iterator++
-    Iterator &operator--(); //--Iterator
-    Iterator operator--(int); //Iterator--
-    bool operator==(const Iterator iterator) const;
+        bool list::Iterator::operator!=(const list::Iterator iterator) const {
+            return !(*this == iterator);
+        }
 
-    bool operator!=(const Iterator iterator) const;
-
-    Iterator(const Iterator &) = default;
-
-    Iterator &operator=(const Iterator &) = default;
-
-};
-
-/*
-template <class T>
-class List<T>:: Iterator {
-    const List<T>* list; // the list the iterator points to
-    int index; // the index of the iterator in the list
-    Iterator(const List<T>* list, int index); // private creator, so only the
-                                              // list can create a list::iterator
-    friend class List<T>; // allow the list access to the iterator
-
-public:
-    const T& operator*() const;
-    Iterator &operator++(); // ++Iterator
-    Iterator operator++(int); // Iterator++
-    Iterator &operator--(); //--Iterator
-    Iterator operator--(int); //Iterator--
-    bool operator==(const Iterator& iterator) const;
-    bool operator!=(const Iterator& iterator) const;
-
-    Iterator(const Iterator&) = default;
-    Iterator& operator=(const Iterator&) = default;
-
-};
-*/
-
-
-
-} // end of namespace eascaperoom
-} // end of namespace list
+    }
+}
 
 #endif //HW4_LIST_H
