@@ -29,9 +29,10 @@ namespace mtm {
         void remove(Iterator iterator);
         bool operator==(const List& list) const;
         bool operator!=(const List& list) const;
-        //TODO: >>
-//      Iterator find(const Predicate& predicate) const;
-//      void sort(const Compare& compare);
+        template <class Predicate>
+        Iterator find(const Predicate& predicate) const;
+        template <class Compare>
+        void sort(const Compare& compare);
         int getSize() const;
     };
 
@@ -205,6 +206,32 @@ namespace mtm {
 
     bool List::operator!=(const List &list) const {
         return !(*this == list);
+    }
+
+
+    template <class Predicate>
+    List::Iterator List::find(const Predicate& predicate) const{
+        Iterator it = this->begin();
+        for( ; it != this->end(); ++it){
+            if(predicate(*it) == true){
+                break;
+            }
+        }
+        return it;
+    }
+
+    template <class Compare>
+    void List::sort(const Compare& compare) {
+        for (Iterator i = begin(); i != end() ; ++i) {
+            Iterator j = i;
+            for (++j; j != end(); ++j) {
+                if (!compare(i.cur_node->data, j.cur_node->data)){
+                    int tmp_data = i.cur_node->data;
+                    i.cur_node->data = j.cur_node->data;
+                    j.cur_node->data = tmp_data;
+                }
+            }
+        }
     }
 
 /*--------------------------------------------------------------------------*//*
