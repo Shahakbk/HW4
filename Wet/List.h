@@ -13,7 +13,7 @@ namespace mtm {
     template <class T>
     class List {
         class Node{
-            T data;
+            T* data;
             Node *next;
             Node *previous;
 
@@ -21,7 +21,7 @@ namespace mtm {
             friend class Iterator;
         public:
             Node(const T data);
-            ~Node() = default;
+            ~Node();
         };
         Node *head;
         Node *last;
@@ -80,7 +80,7 @@ namespace mtm {
     template <class T>
     List<T>::List(const List &list) : head(nullptr), last(nullptr), size(0) {
         for (Iterator it = list.begin(); it != list.end(); ++it) {
-            insert(it.cur_node->data);
+            insert(*it.cur_node->data);
         }
     }
 
@@ -106,7 +106,7 @@ namespace mtm {
         }
 
         for (Iterator it = list.begin(); it != list.end(); ++it) {
-            insert(it.cur_node->data);
+            insert(*it.cur_node->data);
         }
         return *this;
     }
@@ -207,7 +207,7 @@ namespace mtm {
         Iterator it_right = list.begin();
 
         for ( ; it_left != end(); ++it_left, ++it_right) {
-            if (it_left.cur_node->data != it_right.cur_node->data){
+            if (*it_left.cur_node->data != *it_right.cur_node->data){
                 return false;
             }
         }
@@ -237,8 +237,13 @@ namespace mtm {
         for (Iterator i = begin(); i != end() ; ++i) {
             Iterator j = i;
             for (++j; j != end(); ++j) {
-                if (!compare(i.cur_node->data, j.cur_node->data)){
-                    std::swap(i.cur_node->data, j.cur_node->data);
+                if (!compare(*i.cur_node->data, *j.cur_node->data)){
+                    T* tmp = new T(*i.cur_node->data);
+                    delete i.cur_node->data;
+                    i.cur_node->data = new T(*j.cur_node->data);
+                    delete j.cur_node->data;
+                    j.cur_node->data = new T(*tmp);
+                    delete tmp;
                 }
             }
         }
@@ -253,10 +258,14 @@ namespace mtm {
  *
 *//*--------------------------------------------------------------------------*/
 
-    //TODO: might need to do allocation
     template <class T>
-    List<T>::Node::Node(const T data) : data(data), next(nullptr),
+    List<T>::Node::Node(const T data) : data(new T(data)), next(nullptr),
                                         previous(nullptr) {}
+
+    template <class T>
+    List<T>::Node::~Node() {
+        delete data;
+    }
 
 /*--------------------------------------------------------------------------*//*
  *                       ____ __                   __
@@ -277,7 +286,7 @@ namespace mtm {
         if (cur_node == nullptr){
             throw ElementNotFound();
         }
-        return cur_node->data;
+        return *cur_node->data;
     }
 
     template <class T>
