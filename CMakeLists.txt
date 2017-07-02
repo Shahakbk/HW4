@@ -3,9 +3,7 @@ project(HW4)
 
 set(CMAKE_CXX_STANDARD 11)
 
-SET(GXX_COVERAGE_COMPILE_FLAGS "-Wall -pedantic-errors -Werror -DNDEBUG")
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GXX_COVERAGE_COMPILE_FLAGS}" )
+set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Werror -pedantic-errors -DNDEBUG")
 
-set(SOURCE_FILES Wet/Enigma.cpp Wet/list.h Wet/tests/ListTest.cpp)
+set(SOURCE_FILES Wet/Exceptions.h Wet/tests/ListTest.cpp Wet/List.h)
 add_executable(HW4 ${SOURCE_FILES})
-
