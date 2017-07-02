@@ -28,18 +28,33 @@ namespace mtm {
                       const int& maxParticipants, const int& ageLimit,
                       const int& numOfScaryEnigmas);
 
+            /**
+             * sets a new age limit for the specific scary room
+             * @param limit - the new age limit
+             */
             void setNewAgeLimit(const int& limit);
 
+            /**
+             * increases the number of scary enigmas with the room by one
+             */
             void incNumberOfScaryEnigmas();
 
-            int getAgeLimit();
+            /**
+             * find the age limit of the room
+             * @return - the age limit of the specific scary room
+             */
+            int getAgeLimit() const;
 
         private:
 
             int ageLimit;
             int numOfScaryEnigmas;
 
-
+            /**
+             * a print function relevant for ScaryRoom that overrides the
+             * virtual printing functio of EscapeRoomWrapper
+             */
+            void print(std::ostream& output) const override;
         };
     }
 }

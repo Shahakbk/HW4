@@ -38,11 +38,11 @@ int main(){
     scary1.addEnigma(diffEnigma2);
     scary1.removeEnigma(sameEnigma1);
 
-/*    try {
+    try {
         scary1.removeEnigma(sameEnigma1);
     } catch (EscapeRoomEnigmaNotFoundException) {
         cout << "Enigma not found!" << endl;
-    }*/
+    }
     try {
         scary2.removeEnigma(sameEnigma1);
     } catch (mtm::escaperoom::EscapeRoomNoEnigmasException) {
@@ -59,6 +59,16 @@ int main(){
     Enigma hardest = scary1.getHardestEnigma();
     vector<Enigma> &roomEnigmas = scary1.getAllEnigmas();
     roomEnigmas.pop_back();
+
+    if (scary1.getAgeLimit() != 18) {
+        cout << "Error: 'getAgeLimit'!" << endl;
+    }
+
+    scary2.setNewAgeLimit(20);
+    if (scary2.getAgeLimit() != 20) {
+        cout << "Error: 'setNewAgeLimit'!" << endl;
+    }
+    cout << scary1 << endl;
 
     return 0;
 }

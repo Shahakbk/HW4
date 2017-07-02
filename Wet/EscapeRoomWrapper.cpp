@@ -128,7 +128,7 @@ int EscapeRoomWrapper::getMaxParticipants() const {
     return roomGetMaxParticipants(escape_room);
 }
 
-void EscapeRoomWrapper::print(std::ostream& output) {
+void EscapeRoomWrapper::print(std::ostream& output) const {
     output << this->getName() << " (" << this->getMaxTime() << " /" <<
            this->level() << " /" << this->getMaxParticipants() << ")";
 }

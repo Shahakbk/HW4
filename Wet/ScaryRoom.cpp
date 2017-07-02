@@ -3,7 +3,6 @@
 //
 
 #include "ScaryRoom.h"
-#include "EscapeRoomWrapper.h"
 #include "Exceptions.h"
 
 using namespace mtm::escaperoom;
@@ -26,6 +25,12 @@ void ScaryRoom::incNumberOfScaryEnigmas() {
     numOfScaryEnigmas++;
 }
 
-int ScaryRoom::getAgeLimit() {
+int ScaryRoom::getAgeLimit() const {
     return ageLimit;
+}
+
+void ScaryRoom::print(std::ostream &output) const {
+    output << this->getName() << " (" << this->getMaxTime() << " /" <<
+           this->level() << " /" << this->getMaxParticipants() << " /" <<
+           this->getAgeLimit() << ")";
 }
