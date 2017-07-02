@@ -130,6 +130,15 @@ namespace mtm{
             //
             int getMaxParticipants() const;
 
+        protected:
+
+            /**
+             * a virtual function that will be called from within the <<
+             * operator, since '<<' is a friend function and not a method and
+             * thus cannot be virtual and overrode.
+             * it is declared as 'protected' hence it can be inherited
+             */
+            virtual void print(std::ostream& output) const;
         };
 
         std::ostream& operator<<(std::ostream& output, const EscapeRoomWrapper& room);
