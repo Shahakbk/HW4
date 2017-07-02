@@ -65,38 +65,6 @@ namespace mtm {
         int getSize() const;
     };
 
-/*    class List::Iterator {
-        const List* list;
-        Node *cur_node;
-        Iterator(const List* list, Node *cur_node);
-
-        friend class List;
-
-    public:
-        Iterator(const Iterator &) = default;
-        Iterator &operator=(const Iterator &) = default;
-        ~Iterator() = default;
-        const int &operator*() const;
-        Iterator &operator++();
-        Iterator operator++(int);
-        Iterator &operator--();
-        Iterator operator--(int);
-        bool operator==(const Iterator iterator) const;
-        bool operator!=(const Iterator iterator) const;
-    };*/
-
-/*    class List::Node {
-        int data;
-        Node *next;
-        Node *previous;
-
-        friend class List;
-        friend class Iterator;
-    public:
-        Node(const int data);
-        ~Node() = default;
-    };*/
-
 /*--------------------------------------------------------------------------*//*
  *                          __    _      __
  *                         / /   (_)____/ /_
@@ -127,7 +95,9 @@ namespace mtm {
 
     template <class T>
     List<T> &List<T>::operator=(const List &list) {
-        List tmp = list;
+        if (this == &list){
+            return *this;
+        }
 
         Iterator it_left = begin();
         while (it_left != end()){
@@ -197,7 +167,7 @@ namespace mtm {
         }
         size--;
         if(size == 0){
-            delete(iterator.cur_node);
+            delete iterator.cur_node;
             head = nullptr;
             last = nullptr;
             return;
@@ -207,19 +177,19 @@ namespace mtm {
 
         if (iterator.cur_node == head) {
             next_node->previous = nullptr;
-            delete(iterator.cur_node);
+            delete iterator.cur_node;
             head = next_node;
             return;
         }
         if (iterator.cur_node == last) {
             prev_node->next = nullptr;
-            delete(iterator.cur_node);
+            delete iterator.cur_node;
             last = prev_node;
             return;
         }
         next_node->previous = prev_node;
         prev_node->next = next_node;
-        delete(iterator.cur_node);
+        delete iterator.cur_node;
     }
 
     template <class T>
@@ -236,7 +206,7 @@ namespace mtm {
         Iterator it_left = begin();
         Iterator it_right = list.begin();
 
-        for (; it_left != end(); ++it_left, ++it_right) {
+        for ( ; it_left != end(); ++it_left, ++it_right) {
             if (it_left.cur_node->data != it_right.cur_node->data){
                 return false;
             }
@@ -268,10 +238,7 @@ namespace mtm {
             Iterator j = i;
             for (++j; j != end(); ++j) {
                 if (!compare(i.cur_node->data, j.cur_node->data)){
-                    T tmp_data = i.cur_node->data;
-                    //TODO: only have c'tor
-                    i.cur_node->data = j.cur_node->data;
-                    j.cur_node->data = tmp_data;
+                    std::swap(i.cur_node->data, j.cur_node->data);
                 }
             }
         }
@@ -286,6 +253,7 @@ namespace mtm {
  *
 *//*--------------------------------------------------------------------------*/
 
+    //TODO: might need to do allocation
     template <class T>
     List<T>::Node::Node(const T data) : data(data), next(nullptr),
                                         previous(nullptr) {}
