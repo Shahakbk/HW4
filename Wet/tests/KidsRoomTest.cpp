@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#include "../ScaryRoom.h"
+#include "../KidsRoom.h"
 #include "../Exceptions.h"
 
 using namespace mtm::escaperoom;
@@ -12,7 +12,7 @@ using std::cout;
 using std::endl;
 
 int main(){
-    cout << "Starting temporary ScaryRoom tests:" << endl;
+    cout << "Starting temporary KidsRoom tests:" << endl;
 
     set<string> elements1;
     elements1.insert("element1");
@@ -30,44 +30,44 @@ int main(){
     emptyEnigma.addElement("No longer empty");
     emptyEnigma.addElement("Oops I did it again");
 
-    ScaryRoom scary1((char*)"FirstScary", 50, 3, 5, 18, 2);
-    ScaryRoom scary2((char*)"EmptyScary", 40, 2, 4, 21, 3);
+    KidsRoom kids1((char*)"FirstKidsRoom", 50, 3, 5, 18);
+    KidsRoom kids2((char*)"EmptyKidsRoom", 40, 2, 4, 21);
 
-    scary1.addEnigma(sameEnigma1);
-    scary1.addEnigma(diffEnigma1);
-    scary1.addEnigma(diffEnigma2);
-    scary1.removeEnigma(sameEnigma1);
+    kids1.addEnigma(sameEnigma1);
+    kids1.addEnigma(diffEnigma1);
+    kids1.addEnigma(diffEnigma2);
+    kids1.removeEnigma(sameEnigma1);
 
     try {
-        scary1.removeEnigma(sameEnigma1);
+        kids1.removeEnigma(sameEnigma1);
     } catch (EscapeRoomEnigmaNotFoundException) {
         cout << "Enigma not found!" << endl;
     }
     try {
-        scary2.removeEnigma(sameEnigma1);
+        kids2.removeEnigma(sameEnigma1);
     } catch (EscapeRoomNoEnigmasException) {
         cout << "No enigma found!" << endl;
     }
 
-    scary1.addEnigma(sameEnigma1);
-    scary1.addEnigma(sameEnigma2);
-    scary1.addEnigma(diffEnigma1);
-    scary1.addEnigma(diffEnigma2);
-    scary1.addEnigma(emptyEnigma);
+    kids1.addEnigma(sameEnigma1);
+    kids1.addEnigma(sameEnigma2);
+    kids1.addEnigma(diffEnigma1);
+    kids1.addEnigma(diffEnigma2);
+    kids1.addEnigma(emptyEnigma);
 
-    Enigma hardest = scary1.getHardestEnigma();
-    vector<Enigma> &roomEnigmas = scary1.getAllEnigmas();
+    Enigma hardest = kids1.getHardestEnigma();
+    vector<Enigma> &roomEnigmas = kids1.getAllEnigmas();
     roomEnigmas.pop_back();
 
-    if (scary1.getAgeLimit() != 18) {
+    if (kids1.getAgeLimit() != 18) {
         cout << "Error: 'getAgeLimit'!" << endl;
     }
 
-    scary2.setNewAgeLimit(20);
-    if (scary2.getAgeLimit() != 20) {
+    kids2.setNewAgeLimit(20);
+    if (kids2.getAgeLimit() != 20) {
         cout << "Error: 'setNewAgeLimit'!" << endl;
     }
-    cout << scary1 << endl;
+    cout << kids1 << endl;
 
     return 0;
 }

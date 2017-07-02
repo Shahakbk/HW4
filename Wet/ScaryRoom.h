@@ -13,6 +13,17 @@ namespace mtm {
 
         class ScaryRoom : public EscapeRoomWrapper {
 
+        private:
+
+            int ageLimit;
+            int numOfScaryEnigmas;
+
+            /**
+             * a print function relevant for ScaryRoom that overrides the
+             * virtual printing function of EscapeRoomWrapper
+             */
+            void print(std::ostream& output) const override;
+
         public:
 
             /**
@@ -29,8 +40,8 @@ namespace mtm {
                       const int& numOfScaryEnigmas);
 
             /**
-             * sets a new age limit for the specific scary room
-             * @param limit - the new age limit
+             * sets a new minimum age limit for the specific scary room
+             * @param limit - the new minimum age limit
              */
             void setNewAgeLimit(const int& limit);
 
@@ -40,21 +51,10 @@ namespace mtm {
             void incNumberOfScaryEnigmas();
 
             /**
-             * find the age limit of the room
-             * @return - the age limit of the specific scary room
+             * find the minimum age limit of the room
+             * @return - the minimum age limit of the specific scary room
              */
             int getAgeLimit() const;
-
-        private:
-
-            int ageLimit;
-            int numOfScaryEnigmas;
-
-            /**
-             * a print function relevant for ScaryRoom that overrides the
-             * virtual printing functio of EscapeRoomWrapper
-             */
-            void print(std::ostream& output) const override;
         };
     }
 }
