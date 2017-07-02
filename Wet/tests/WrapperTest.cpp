@@ -49,6 +49,7 @@ int main(){
     wrapper1.addEnigma(diffEnigma1);
     wrapper1.addEnigma(diffEnigma2);
     wrapper1.removeEnigma(sameEnigma1);
+
     try {
         wrapper1.removeEnigma(sameEnigma1);
     } catch (EscapeRoomEnigmaNotFoundException) {
@@ -68,6 +69,7 @@ int main(){
 
     Enigma hardest = wrapper3.getHardestEnigma();
     vector<Enigma> &roomEnigmas = wrapper3.getAllEnigmas();
+    roomEnigmas.pop_back();
 
 
     return 0;

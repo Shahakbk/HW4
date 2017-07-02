@@ -12,21 +12,21 @@ EscapeRoomWrapper::EscapeRoomWrapper(char *name, const int &escapeTime,
                                      const int &level,
                                      const int &maxParticipants) :
         escape_room(escapeRoomCreate(name, escapeTime, level, maxParticipants)){
-    if (escape_room == NULL) {
+    if (nullptr == escape_room) {
         throw EscapeRoomMemoryProblemException();
     }
 }
 
 EscapeRoomWrapper::EscapeRoomWrapper(char *name, const int &level) :
         escape_room(escapeRoomCreate(name, 60, level, 6)) {
-    if (escape_room == NULL) {
+    if (nullptr == escape_room) {
         throw EscapeRoomMemoryProblemException();
     }
 }
 
 EscapeRoomWrapper::EscapeRoomWrapper(const EscapeRoomWrapper &room) :
         escape_room(escapeRoomCopy(room.escape_room)) {
-    if (escape_room == NULL) {
+    if (nullptr == escape_room) {
         throw EscapeRoomMemoryProblemException();
     }
 }
@@ -128,9 +128,13 @@ int EscapeRoomWrapper::getMaxParticipants() const {
     return roomGetMaxParticipants(escape_room);
 }
 
+void EscapeRoomWrapper::print(std::ostream& output) {
+    output << this->getName() << " (" << this->getMaxTime() << " /" <<
+           this->level() << " /" << this->getMaxParticipants() << ")";
+}
+
 std::ostream& mtm::escaperoom::operator<<(std::ostream& output,
                                           const EscapeRoomWrapper& room){
-    output << room.getName() << " (" << room.getMaxTime() << " /" <<
-           room.level() << " /" << room.getMaxParticipants() << ")";
+    room.print(output);
     return output;
 }
