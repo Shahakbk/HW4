@@ -59,7 +59,7 @@ namespace mtm {
             /**
              * a destructor for scary room to override the virtual base destructor
              */
-            ~ScaryRoom() override;
+            ~ScaryRoom() override = default;
         };
     }
 }

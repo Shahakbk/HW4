@@ -5,8 +5,12 @@
 #include <iostream>
 #include <string.h>
 #include <set>
+
 #include "EscapeRoomWrapper.h"
 #include "Enigma.h"
+#include "ScaryRoom.h"
+#include "KidsRoom.h"
+
 
 using std::set;
 using std::string;

@@ -39,8 +39,7 @@ void EscapeRoomWrapper::removeEnigma(const Enigma &enigma) {
     if (0 == enigmas.size()) {
         throw EscapeRoomNoEnigmasException();
     }
-    // assuming there's no multiplicity of enigmas in a room
-    // TODO ^make sure^
+
     for (vector<Enigma>::iterator i = enigmas.begin(); i != enigmas.end(); ++i){
         if (*i == enigma) {
             enigmas.erase(i);
@@ -67,10 +66,11 @@ Enigma EscapeRoomWrapper::getHardestEnigma() {
 }
 
 vector<Enigma>& EscapeRoomWrapper::getAllEnigmas() {
-    vector<Enigma> *result = new vector<Enigma>(enigmas);
-    return *result;
-    //return &std::vector<Enigma>(enigmas);
-    //TODO check what's the deal..
+    /*vector<Enigma> *result = new vector<Enigma>(enigmas);
+    return *result;*/
+    // a new copy will be created due to assignment operator
+    //TODO make sure
+    return enigmas;
 }
 
 void EscapeRoomWrapper::addElement(const Enigma& enigma, const string& element) {
@@ -108,6 +108,9 @@ void EscapeRoomWrapper::removeElement(const Enigma &enigma,
 
 EscapeRoomWrapper &EscapeRoomWrapper::operator=(const EscapeRoomWrapper &room) {
     EscapeRoom tmp = escapeRoomCopy(room.escape_room);
+    if (nullptr == tmp) {
+        throw EscapeRoomMemoryProblemException();
+    }
     escapeRoomDestroy(escape_room);
     escape_room = tmp;
     return *this;

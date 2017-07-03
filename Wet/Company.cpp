@@ -3,8 +3,6 @@
 //
 
 #include "Company.h"
-#include "ScaryRoom.h"
-#include "KidsRoom.h"
 #include "Exceptions.h"
 
 using namespace mtm::escaperoom;
@@ -19,6 +17,7 @@ Company::Company(const Company &company) :
         name(company.name),
         phoneNumber(company.phoneNumber),
         rooms(company.rooms) {}
+//TODO check if set / vector duplicate this way
 
 Company::~Company() {
     delete(&name);
@@ -48,6 +47,8 @@ void Company::createRoom(char *name, const int &escapeTime, const int &level,
     try {
         EscapeRoomWrapper newRoom = EscapeRoomWrapper(name, escapeTime, level,
                                                       maxParticipants);
+        // set.insert creates a copy so we don't need 'new'
+        //TODO double check
         rooms.insert(&newRoom);
     } catch (EscapeRoomMemoryProblemException) {
         throw CompanyMemoryProblemException();
@@ -62,6 +63,8 @@ void Company::createScaryRoom(char *name, const int &escapeTime,
         ScaryRoom scaryRoom = ScaryRoom(name, escapeTime, level,
                                         maxParticipants, ageLimit,
                                         numOfScaryEnigmas);
+        // set.insert creates a copy so we don't need 'new'
+        //TODO double check
         rooms.insert(&scaryRoom);
     } catch (EscapeRoomMemoryProblemException) {
         throw CompanyMemoryProblemException();
@@ -74,6 +77,8 @@ void Company::createKidsRoom(char *name, const int &escapeTime,
     try {
         KidsRoom kidsRoom = KidsRoom(name, escapeTime, level,
                                      maxParticipants, ageLimit);
+        // set.insert creates a copy so we don't need 'new'
+        //TODO double check
         rooms.insert(&kidsRoom);
     } catch (EscapeRoomMemoryProblemException) {
         throw CompanyMemoryProblemException();
@@ -91,7 +96,7 @@ void Company::removeRoom(const EscapeRoomWrapper &room) {
          i != rooms.end(); ++i) {
 
         if (**i == room) {
-            //TODO make sure enigmas are erased
+            delete(*i);
             rooms.erase(i);
             return;
         }
@@ -182,13 +187,16 @@ void Company::removeItem(const EscapeRoomWrapper& room,
 
 set<EscapeRoomWrapper*> Company::getAllRoomsByType(RoomType type) const {
 
-    set<EscapeRoomWrapper*> *newSet = new set<EscapeRoomWrapper*>();
+    //set<EscapeRoomWrapper*> *newSet = new set<EscapeRoomWrapper*>();
+    set<EscapeRoomWrapper*> newSet = set<EscapeRoomWrapper*>();
+    //TODO make sure
     for (set<EscapeRoomWrapper *>::iterator i = rooms.begin(); i != rooms.end(); ++i) {
 
         if (type == KIDS_ROOM) {
             KidsRoom* ptrRoom = dynamic_cast<KidsRoom*>(*i);
             if (nullptr != ptrRoom) {
-                (*newSet).insert(*i);
+                //(*newSet).insert(*i);
+                newSet.insert(*i);
                 continue;
             }
         }
@@ -196,7 +204,8 @@ set<EscapeRoomWrapper*> Company::getAllRoomsByType(RoomType type) const {
         if (type == SCARY_ROOM) {
             ScaryRoom* ptrRoom = dynamic_cast<ScaryRoom*>(*i);
             if (nullptr != ptrRoom) {
-                (*newSet).insert(*i);
+                //(*newSet).insert(*i);
+                newSet.insert(*i);
                 continue;
             }
         }
@@ -206,13 +215,15 @@ set<EscapeRoomWrapper*> Company::getAllRoomsByType(RoomType type) const {
             EscapeRoomWrapper* ptrRoom = dynamic_cast<EscapeRoomWrapper*>(*i);
             //TODO make sure this ^ doesn't take scary & kids as well
             if (nullptr != ptrRoom) {
-                (*newSet).insert(*i);
+                //(*newSet).insert(*i);
+                newSet.insert(*i);
                 continue;
             }
         }
     }
 
-    return *newSet;
+    //return *newSet;
+    return newSet;
 }
 
 EscapeRoomWrapper* Company::getRoomByName(const string& name) const {

@@ -50,7 +50,7 @@ namespace mtm {
             /**
              * a destructor for kids room to override the virtual base destructor
              */
-            ~KidsRoom() override;
+            ~KidsRoom() override = default;
         };
     }
 }

@@ -49,7 +49,6 @@ void Enigma::removeElement(const string& element) {
 }
 
 bool Enigma::operator==(const Enigma &enigma) const {
-    //TODO nullptr parameter??
     if (name != enigma.name) {
         return false;
     }
@@ -58,7 +57,6 @@ bool Enigma::operator==(const Enigma &enigma) const {
 }
 
 bool Enigma::operator!=(const Enigma &enigma) const {
-    //TODO nullptr parameter??
     if (name == enigma.name) {
         return false;
     }
@@ -87,8 +85,9 @@ Difficulty Enigma::getDifficulty() const {
 }
 
 string Enigma::getName() const {
-    string newName = name;
-    return newName;
+/*    string newName = name;
+    return newName;*/
+    return name;
 }
 
 int Enigma::getNumOfElements() const {
