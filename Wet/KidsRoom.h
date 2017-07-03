@@ -46,6 +46,11 @@ namespace mtm {
              * @return - the maximum age limit of the specific kids room
              */
             int getAgeLimit() const;
+
+            /**
+             * a destructor for kids room to override the virtual base destructor
+             */
+            ~KidsRoom() override;
         };
     }
 }

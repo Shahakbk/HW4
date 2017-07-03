@@ -69,9 +69,41 @@ Enigma EscapeRoomWrapper::getHardestEnigma() {
 vector<Enigma>& EscapeRoomWrapper::getAllEnigmas() {
     vector<Enigma> *result = new vector<Enigma>(enigmas);
     return *result;
+    //return &std::vector<Enigma>(enigmas);
+    //TODO check what's the deal..
 }
-void EscapeRoomWrapper::check(Enigma enigma) {
-    enigmas.push_back(enigma);
+
+void EscapeRoomWrapper::addElement(const Enigma& enigma, const string& element) {
+
+    for (vector<Enigma>::iterator i = enigmas.begin(); i != enigmas.end(); ++i) {
+
+        if (*i == enigma) {
+            (*i).addElement(element);
+            return;;
+        }
+    }
+
+    throw EscapeRoomEnigmaNotFoundException();
+}
+
+void EscapeRoomWrapper::removeElement(const Enigma &enigma,
+                                      const string& element) {
+
+    for (vector<Enigma>::iterator i = enigmas.begin(); i != enigmas.end(); ++i) {
+
+        if (*i == enigma) {
+            try {
+                (*i).removeElement(element);
+            } catch (EnigmaNoElementsException) {
+                throw EnigmaNoElementsException();
+            } catch (EnigmaElementNotFoundException) {
+                throw EnigmaElementNotFoundException();
+            }
+            return;
+        }
+    }
+
+    throw EscapeRoomEnigmaNotFoundException();
 }
 
 EscapeRoomWrapper &EscapeRoomWrapper::operator=(const EscapeRoomWrapper &room) {
@@ -109,6 +141,7 @@ void EscapeRoomWrapper::rate(const int &newRate) {
 }
 
 EscapeRoomWrapper::~EscapeRoomWrapper() {
+    delete(&enigmas);
     escapeRoomDestroy(escape_room);
 }
 

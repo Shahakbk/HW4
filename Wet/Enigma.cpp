@@ -17,23 +17,16 @@ using std::string;
 //TODO ?? using mtm::escaperoom::Enigma;
 
 Enigma::Enigma(const std::string& name, const Difficulty& difficulty,
-               const int& numOfElements, const set<string> &elements) {
-
-    //TODO nullptr parameter??
-    int num = (int)elements.size();
-    if (num != numOfElements) {
-        //throw EnigmaIllegalSizeParamException();
+               const int &numOfElements, const set<string> &elements) :
+        name(name), difficulty(difficulty), numOfElements(numOfElements),
+        elements(elements) {
+    if ((int) elements.size() != numOfElements) {
+        throw EnigmaIllegalSizeParamException();
     }
-    this->elements = elements;
-    this->name = name;
-    this->difficulty = difficulty;
-    this->numOfElements = numOfElements;
 }
 
-Enigma::Enigma(const std::string& name, const Difficulty& difficulty) {
-    this->name = name;
-    this->difficulty = difficulty;
-    this->numOfElements = 0;
+Enigma::Enigma(const std::string &name, const Difficulty &difficulty) : name(
+        name), difficulty(difficulty), numOfElements(0) {
     // elements is initialized as an empty set by default
 }
 
@@ -94,7 +87,7 @@ Difficulty Enigma::getDifficulty() const {
 }
 
 string Enigma::getName() const {
-    std::string newName = name;
+    string newName = name;
     return newName;
 }
 
@@ -109,5 +102,4 @@ std::ostream &mtm::escaperoom::operator<<(std::ostream &output,
     return output;
 }
 
-
-
+//TODO make sure 'elements' is destroyed

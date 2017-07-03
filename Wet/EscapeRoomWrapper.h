@@ -73,8 +73,20 @@ namespace mtm{
              * @return - a copy of the enigmas vector of the room
              */
             vector<Enigma>& getAllEnigmas();
-            void check(Enigma enigma);
 
+            /**
+             * adds an element to the given enigma in the room
+             * @param enigma - the enigma to add the element to
+             * @param element - the element to add to the enigma
+             */
+            void addElement(const Enigma& enigma, const string& element);
+
+            /**
+             * removes an element from a specific enigma in the room
+             * @param enigma - the enigma to remove the element from
+             * @param element - the element to remove from the enigma
+             */
+            void removeElement(const Enigma &enigma, const string& element);
 
             //assignment operator
             //
@@ -104,7 +116,7 @@ namespace mtm{
             void rate(const int& newRate);
 
             // Destructor for EscapeRoomWrapper
-            ~EscapeRoomWrapper();
+            virtual ~EscapeRoomWrapper();
 
             // Prints the data of the Room in the following format:
             //

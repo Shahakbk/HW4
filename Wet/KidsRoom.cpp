@@ -24,6 +24,10 @@ int KidsRoom::getAgeLimit() const {
     return ageLimit;
 }
 
+KidsRoom::~KidsRoom() {
+    delete(&ageLimit);
+}
+
 void KidsRoom::print(std::ostream &output) const {
     output << this->getName() << " (" << this->getMaxTime() << " /" <<
            this->level() << " /" << this->getMaxParticipants() << " /" <<

@@ -55,6 +55,11 @@ namespace mtm {
              * @return - the minimum age limit of the specific scary room
              */
             int getAgeLimit() const;
+
+            /**
+             * a destructor for scary room to override the virtual base destructor
+             */
+            ~ScaryRoom() override;
         };
     }
 }
