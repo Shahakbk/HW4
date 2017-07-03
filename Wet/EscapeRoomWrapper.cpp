@@ -144,7 +144,8 @@ void EscapeRoomWrapper::rate(const int &newRate) {
 }
 
 EscapeRoomWrapper::~EscapeRoomWrapper() {
-    delete(&enigmas);
+   // delete(&enigmas);
+    //TODO ^causing SEG failed
     escapeRoomDestroy(escape_room);
 }
 

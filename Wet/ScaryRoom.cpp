@@ -29,13 +29,8 @@ int ScaryRoom::getAgeLimit() const {
     return ageLimit;
 }
 
-/*ScaryRoom::~ScaryRoom() {
-    delete(&ageLimit);
-    delete(&numOfScaryEnigmas);
-}*/
-
 void ScaryRoom::print(std::ostream &output) const {
-    output << this->getName() << " (" << this->getMaxTime() << " /" <<
-           this->level() << " /" << this->getMaxParticipants() << " /" <<
-           this->getAgeLimit() << ")";
+    output << "Scary Room: " << this->getName() << " (" << this->getMaxTime()
+           << "/" << this->level() << "/" << this->getMaxParticipants()
+           << "/" << this->getAgeLimit() << ")";
 }

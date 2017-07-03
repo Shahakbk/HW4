@@ -20,13 +20,12 @@ Company::Company(const Company &company) :
 //TODO check if set / vector duplicate this way
 
 Company::~Company() {
-    delete(&name);
-    delete(&phoneNumber);
     for (set<EscapeRoomWrapper *>::iterator i = rooms.begin();
          i != rooms.end(); ++i) {
         delete(*i);
     }
-    delete(&rooms);
+    //  delete(&rooms);
+    // ^causing SEG fault
 }
 
 Company &Company::operator=(const Company &company) {
@@ -45,11 +44,10 @@ Company &Company::operator=(const Company &company) {
 void Company::createRoom(char *name, const int &escapeTime, const int &level,
                          const int &maxParticipants) {
     try {
-        EscapeRoomWrapper newRoom = EscapeRoomWrapper(name, escapeTime, level,
-                                                      maxParticipants);
-        // set.insert creates a copy so we don't need 'new'
-        //TODO double check
-        rooms.insert(&newRoom);
+/*        EscapeRoomWrapper *newRoom = new EscapeRoomWrapper(name, escapeTime,
+                                                           level,
+                                                           maxParticipants);*/
+        rooms.insert(new EscapeRoomWrapper(name, escapeTime, level, maxParticipants));
     } catch (EscapeRoomMemoryProblemException) {
         throw CompanyMemoryProblemException();
     }
@@ -60,12 +58,11 @@ void Company::createScaryRoom(char *name, const int &escapeTime,
                               const int &ageLimit,
                               const int &numOfScaryEnigmas) {
     try {
-        ScaryRoom scaryRoom = ScaryRoom(name, escapeTime, level,
+/*        ScaryRoom scaryRoom = ScaryRoom(name, escapeTime, level,
                                         maxParticipants, ageLimit,
-                                        numOfScaryEnigmas);
-        // set.insert creates a copy so we don't need 'new'
-        //TODO double check
-        rooms.insert(&scaryRoom);
+                                        numOfScaryEnigmas);*/
+        rooms.insert(new ScaryRoom(name, escapeTime, level, maxParticipants,
+                                   ageLimit, numOfScaryEnigmas));
     } catch (EscapeRoomMemoryProblemException) {
         throw CompanyMemoryProblemException();
     }
@@ -75,11 +72,11 @@ void Company::createKidsRoom(char *name, const int &escapeTime,
                              const int &level, const int &maxParticipants,
                              const int &ageLimit) {
     try {
-        KidsRoom kidsRoom = KidsRoom(name, escapeTime, level,
-                                     maxParticipants, ageLimit);
-        // set.insert creates a copy so we don't need 'new'
+/*        KidsRoom kidsRoom = KidsRoom(name, escapeTime, level,
+                                     maxParticipants, ageLimit);*/
         //TODO double check
-        rooms.insert(&kidsRoom);
+        rooms.insert(new KidsRoom(name, escapeTime, level, maxParticipants,
+                                  ageLimit));
     } catch (EscapeRoomMemoryProblemException) {
         throw CompanyMemoryProblemException();
     }
@@ -87,7 +84,6 @@ void Company::createKidsRoom(char *name, const int &escapeTime,
 
 set<EscapeRoomWrapper *> Company::getAllRooms() const {
     return rooms;
-    //TODO - FAQ says there's no need to create a copy. change to const &?
 }
 
 void Company::removeRoom(const EscapeRoomWrapper &room) {
@@ -194,7 +190,7 @@ set<EscapeRoomWrapper*> Company::getAllRoomsByType(RoomType type) const {
 
         if (type == KIDS_ROOM) {
             KidsRoom* ptrRoom = dynamic_cast<KidsRoom*>(*i);
-            if (nullptr != ptrRoom) {
+                if (nullptr != ptrRoom) {
                 //(*newSet).insert(*i);
                 newSet.insert(*i);
                 continue;
