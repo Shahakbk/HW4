@@ -57,11 +57,7 @@ bool Enigma::operator==(const Enigma &enigma) const {
 }
 
 bool Enigma::operator!=(const Enigma &enigma) const {
-    if (name == enigma.name) {
-        return false;
-    }
-
-    return (difficulty != enigma.difficulty);
+    return (!(*this == enigma));
 }
 
 bool Enigma::operator<(const Enigma &enigma) const {
