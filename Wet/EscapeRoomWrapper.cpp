@@ -8,22 +8,27 @@
 using namespace mtm::escaperoom;
 using std::string;
 
+const int deafult_time = 60;
+const int deafult_max_participants = 6;
+
+
 EscapeRoomWrapper::EscapeRoomWrapper(char *name, const int &escapeTime,
                                      const int &level,
                                      const int &maxParticipants) :
-        escape_room(escapeRoomCreate(name, escapeTime, level, maxParticipants)){
+        escape_room(escapeRoomCreate(name, escapeTime, maxParticipants, level)){
     if (nullptr == escape_room) {
         throw EscapeRoomMemoryProblemException();
     }
 }
 
 EscapeRoomWrapper::EscapeRoomWrapper(char *name, const int &level) :
-        escape_room(escapeRoomCreate(name, 60, level, 6)) {
+        escape_room(escapeRoomCreate(name, deafult_time,
+                                     deafult_max_participants, level)) {
     if (nullptr == escape_room) {
         throw EscapeRoomMemoryProblemException();
     }
 }
-
+//TODO: add vector
 EscapeRoomWrapper::EscapeRoomWrapper(const EscapeRoomWrapper &room) :
         escape_room(escapeRoomCopy(room.escape_room)) {
     if (nullptr == escape_room) {
@@ -105,7 +110,8 @@ void EscapeRoomWrapper::removeElement(const Enigma &enigma,
 
     throw EscapeRoomEnigmaNotFoundException();
 }
-
+//TODO: add vector
+//TODO: check if another check for == this needed
 EscapeRoomWrapper &EscapeRoomWrapper::operator=(const EscapeRoomWrapper &room) {
     EscapeRoom tmp = escapeRoomCopy(room.escape_room);
     if (nullptr == tmp) {
@@ -137,7 +143,7 @@ int EscapeRoomWrapper::level() const {
 }
 
 void EscapeRoomWrapper::rate(const int &newRate) {
-    if (newRate < 0 || newRate >5) {
+    if (newRate < 1 || newRate >5) {
         throw EscapeRoomIllegalRateException();
     }
     updateRate(escape_room, newRate);
@@ -150,7 +156,10 @@ EscapeRoomWrapper::~EscapeRoomWrapper() {
 }
 
 std::string EscapeRoomWrapper::getName() const {
-    return roomGetName(escape_room);
+    char* tmp = roomGetName(escape_room);
+    string name = tmp;
+    free(tmp);
+    return name;
 }
 
 double EscapeRoomWrapper::getRate() const {
@@ -166,8 +175,8 @@ int EscapeRoomWrapper::getMaxParticipants() const {
 }
 
 void EscapeRoomWrapper::print(std::ostream& output) const {
-    output << this->getName() << " (" << this->getMaxTime() << " /" <<
-           this->level() << " /" << this->getMaxParticipants() << ")";
+    output << this->getName() << " (" << this->getMaxTime() << "/" <<
+           this->level() << "/" << this->getMaxParticipants() << ")";
 }
 
 std::ostream& mtm::escaperoom::operator<<(std::ostream& output,
