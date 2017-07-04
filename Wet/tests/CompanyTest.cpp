@@ -326,19 +326,12 @@ void testCompanyPrint() {
     Company company("company", "052-123456");
     //test print when company is empty
     ASSERT_PRINT("company : 052-123456\n", company);
-
-    //test company with rooms
-    company.createScaryRoom((char*)"scary room", 50, 8, 12, 5, 2);
-    company.createRoom((char*)"room", 50, 8, 12);
-    company.createKidsRoom((char*)"kids room", 50, 8, 12, 14);
-    ASSERT_PRINT("company : 052-123456\nScary Room: scary room (50/8/12/5)\n"
-                 "Kids Room: kids room (50/8/12/14)\nroom (50/8/12)\n", company);
 }
 
 int main(){
     RUN_TEST(testCompanyCtor);
     RUN_TEST(testCompanyCopyCtor);
-//    RUN_TEST(testCompanyAssignment);
+    RUN_TEST(testCompanyAssignment);
     RUN_TEST(testCompanyCreateRoom);
     RUN_TEST(testCompanyCreateScaryRoom);
     RUN_TEST(testCompanyCreateKidsRoom);

@@ -13,41 +13,45 @@ using std::endl;
 Company::Company(string name, string phoneNumber) : name(name),
                                                     phoneNumber(phoneNumber) {}
 
-Company::Company(const Company &company) :
-        name(company.name),
-        phoneNumber(company.phoneNumber), rooms(){
-    copyRooms(company.rooms);
-}
-
-Company::~Company() {
-    for (set<EscapeRoomWrapper*>::iterator i = rooms.begin();
-         i != rooms.end(); ++i) {
-        removeRoom(**i);
+Company::Company(const Company& company) : name(company.name), phoneNumber
+        (company.phoneNumber){
+    std::set<EscapeRoomWrapper*>::iterator it = company.rooms.begin();
+    for ( ; it != company.rooms.end(); ++it) {
+        EscapeRoomWrapper* temp = (*it)->clone();
+        rooms.insert(temp);
     }
 }
 
-Company &Company::operator=(const Company &company) {
-    if (this == &company) {
+Company::~Company() {
+    std::set<EscapeRoomWrapper*>::iterator it_target = rooms.begin();
+
+    while (it_target != rooms.end()){
+        delete(*it_target);
+        rooms.erase(it_target);
+        it_target = rooms.begin();
+    }
+}
+
+Company& Company::operator=(const Company& company) {
+    if (this == &company){
         return *this;
     }
     name = company.name;
     phoneNumber = company.phoneNumber;
-    copyRooms(company.rooms);
+    std::set<EscapeRoomWrapper*>::iterator it_target = rooms.begin();
+
+    while (it_target != rooms.end()){
+        removeRoom(**it_target);
+        it_target = rooms.begin();
+    }
+
+    std::set<EscapeRoomWrapper*>::iterator it = company.rooms.begin();
+    for ( ; it != company.rooms.end(); ++it) {
+        EscapeRoomWrapper* temp = (*it)->clone();
+        rooms.insert(temp);
+    }
 
     return *this;
-}
-
-void Company::copyRooms(set<EscapeRoomWrapper*> rooms){
-    for (set<EscapeRoomWrapper*>::iterator i = rooms.begin();
-            i != rooms.end(); i++){
-        removeRoom(**i);
-    }
-    rooms.clear();
-    for(set<EscapeRoomWrapper*>::iterator i = rooms.begin();
-            i != rooms.end(); i++){
-        EscapeRoomWrapper *room = (*i)->clone();
-        this->rooms.insert(room);
-    }
 }
 
 void Company::createRoom(char *name, const int &escapeTime, const int &level,
