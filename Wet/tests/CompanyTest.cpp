@@ -38,7 +38,7 @@ void testCompanyCopyCtor() {
 //    std::cout << "printintg" <<std::endl;
 
 }
-/*//TODO self assignment
+//TODO self assignment
 void testCompanyAssignment() {
     Company company("company", "052-123456");
     company.createRoom((char*)"room", 50, 8, 12);
@@ -71,7 +71,7 @@ void testCompanyAssignment() {
     ASSERT_NO_THROW(assigned_company.removeRoom(scary_room));
 
     //test self assignment
-}*/
+}
 
 void testCompanyCreateRoom() {
     Company company("company", "052-123456");

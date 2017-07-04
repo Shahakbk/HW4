@@ -15,7 +15,7 @@ Company::Company(string name, string phoneNumber) : name(name),
 
 Company::Company(const Company &company) :
         name(company.name),
-        phoneNumber(company.phoneNumber) {
+        phoneNumber(company.phoneNumber), rooms(){
     copyRooms(company.rooms);
 }
 
@@ -32,26 +32,15 @@ Company &Company::operator=(const Company &company) {
     }
     name = company.name;
     phoneNumber = company.phoneNumber;
+    copyRooms(company.rooms);
 
-    std::set<EscapeRoomWrapper*>::iterator to_remove = rooms.begin();
-    while (to_remove != rooms.end()){
-        removeRoom(**to_remove);
-        to_remove = rooms.begin();
-    }
-
-    for (std::set<EscapeRoomWrapper*>::iterator i = company.rooms.begin();
-         i != company.rooms.end(); ++i) {
-        EscapeRoomWrapper *temp = (*i)->clone();
-        rooms.insert(temp);
-    }
     return *this;
 }
 
 void Company::copyRooms(set<EscapeRoomWrapper*> rooms){
     for (set<EscapeRoomWrapper*>::iterator i = rooms.begin();
             i != rooms.end(); i++){
-        EscapeRoomWrapper* room = *i;
-        removeRoom(*room);
+        removeRoom(**i);
     }
     rooms.clear();
     for(set<EscapeRoomWrapper*>::iterator i = rooms.begin();
