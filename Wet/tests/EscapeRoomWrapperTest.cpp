@@ -1,15 +1,11 @@
 //
 // Created by adire on 30-Jun-17.
 //
-#include <iostream>
-
 #include "../EscapeRoomWrapper.h"
 #include "../Exceptions.h"
 #include "../mtmtest.h"
 
 using namespace mtm::escaperoom;
-using std::cout;
-using std::endl;
 
 void testWrapperCtor(){
     //test first ctor

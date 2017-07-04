@@ -2,15 +2,11 @@
 // Created by Shahak on 02/07/2017.
 //
 
-#include <iostream>
-
 #include "../KidsRoom.h"
 #include "../Exceptions.h"
 #include "../mtmtest.h"
 
 using namespace mtm::escaperoom;
-using std::cout;
-using std::endl;
 
 void testKidsRoomCtor(){
     ASSERT_NO_THROW(KidsRoom((char*)"room", 50, 8, 12, 14));

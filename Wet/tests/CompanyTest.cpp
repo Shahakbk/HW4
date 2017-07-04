@@ -2,9 +2,6 @@
 // Created by Shahak on 03/07/2017.
 //
 
-#include <iostream>
-
-#include "../EscapeRoomWrapper.h"
 #include "../Company.h"
 #include "../Exceptions.h"
 #include "../mtmtest.h"

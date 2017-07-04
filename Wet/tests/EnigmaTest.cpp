@@ -2,17 +2,12 @@
 // Created by Shahak on 29/06/2017.
 //
 
-#include <iostream>
-
 #include "../Enigma.h"
 #include "../Exceptions.h"
 #include "../mtmtest.h"
 
 using namespace mtm::escaperoom;
-using std::string;
-using std::cout;
-using std::endl;
-//TODO delete if not necessary
+
 void testEnigmaCtor() {
     set<string> elements;
     elements.insert("book");

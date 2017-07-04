@@ -9,8 +9,6 @@
 #include "../mtmtest.h"
 
 using namespace mtm::escaperoom;
-using std::cout;
-using std::endl;
 
 void testScaryRoomCtor(){
     ASSERT_NO_THROW(ScaryRoom((char*)"room", 50, 8, 12, 5, 2));

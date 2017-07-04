@@ -79,7 +79,6 @@ void Company::createKidsRoom(char *name, const int &escapeTime,
                              const int &level, const int &maxParticipants,
                              const int &ageLimit) {
     try {
-        //TODO double check
         rooms.insert(new KidsRoom(name, escapeTime, level, maxParticipants,
                                   ageLimit));
     } catch (EscapeRoomMemoryProblemException) {
@@ -106,7 +105,6 @@ void Company::removeRoom(const EscapeRoomWrapper &room) {
     throw CompanyRoomNotFoundException();
 }
 
-//TODO can we add or remove const??
 void Company::addEnigma(const EscapeRoomWrapper& room, const Enigma& enigma) {
 
     for (set<EscapeRoomWrapper*>::iterator i = rooms.begin();
@@ -189,7 +187,6 @@ void Company::removeItem(const EscapeRoomWrapper& room,
 set<EscapeRoomWrapper*> Company::getAllRoomsByType(RoomType type) const {
 
     set<EscapeRoomWrapper*> newSet = set<EscapeRoomWrapper*>();
-    //TODO make sure
     for (set<EscapeRoomWrapper *>::iterator i = rooms.begin(); i != rooms.end(); ++i) {
 
         if (type == KIDS_ROOM) {
@@ -233,7 +230,6 @@ EscapeRoomWrapper* Company::getRoomByName(const string& name) const {
 bool mtm::escaperoom::operator==(const Company &a, const Company &b) {
     return (a.name == b.name && a.phoneNumber == b.phoneNumber
             && a.rooms == b.rooms);
-    //TODO double check set comparison
 }
 
 std::ostream& mtm::escaperoom::operator<<(std::ostream& output,

@@ -2,15 +2,11 @@
 // Created by Shahak on 30/06/2017.
 //
 
-#include <iostream>
 #include "../List.h"
 #include "../mtmtest.h"
 
 using namespace mtm;
-using std::string;
-using std::cout;
-using std::endl;
-
+using::std::string;
 /**
  * ARRAY CLASS
  */
