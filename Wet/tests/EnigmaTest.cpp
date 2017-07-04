@@ -129,6 +129,7 @@ void testEnigmaAreEqualyComplex() {
     elements.insert("clock");
     Enigma enigma("name", EASY_ENIGMA, 2, elements);
     set<string> elements2;
+    set<string> elements3;
     elements2.insert("map");
     elements2.insert("lamp");
     Enigma enigma2("name", EASY_ENIGMA, 2, elements2);
@@ -139,6 +140,13 @@ void testEnigmaAreEqualyComplex() {
     //test same num of elements but diff difficulty
     Enigma enigma3("name", HARD_ENIGMA, 2, elements2);
     ASSERT_FALSE(enigma.areEqualyComplex(enigma3));
+    Enigma empty1("empty", HARD_ENIGMA, 0, elements3);
+    Enigma empty2("also empty", HARD_ENIGMA, 0, elements3);
+    ASSERT_TRUE(empty1.areEqualyComplex(empty2));
+
+    //test empty enigmas with different difficulty level
+    Enigma empty3("empty dumpty", MEDIUM_ENIGMA, 0, elements3);
+    ASSERT_FALSE(empty3.areEqualyComplex(empty2));
 
     //test same diff but diff sum of elements
     enigma2.addElement("rope");

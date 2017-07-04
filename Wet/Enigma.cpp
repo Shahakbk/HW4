@@ -31,7 +31,7 @@ Enigma::Enigma(const std::string &name, const Difficulty &difficulty) : name(
 
 void Enigma::addElement(const string& element) {
     elements.insert(element);
-    numOfElements++;
+    numOfElements = (int)elements.size();
 }
 
 void Enigma::removeElement(const string& element) {
@@ -44,7 +44,7 @@ void Enigma::removeElement(const string& element) {
     if (0 == elements.erase(element)) {
         throw EnigmaElementNotFoundException();
     }
-    numOfElements--;
+    numOfElements = (int)elements.size();
 }
 
 bool Enigma::operator==(const Enigma &enigma) const {
