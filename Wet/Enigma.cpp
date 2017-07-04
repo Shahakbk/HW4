@@ -14,7 +14,6 @@ using namespace mtm::escaperoom;
  * classes in use
  */
 using std::string;
-//TODO ?? using mtm::escaperoom::Enigma;
 
 Enigma::Enigma(const std::string& name, const Difficulty& difficulty,
                const int &numOfElements, const set<string> &elements) :
@@ -96,5 +95,3 @@ std::ostream &mtm::escaperoom::operator<<(std::ostream &output,
                   << enigma.getNumOfElements();
     return output;
 }
-
-//TODO make sure 'elements' is destroyed

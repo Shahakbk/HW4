@@ -160,6 +160,14 @@ void testEnigmaGetName() {
     ASSERT_EQUALS("name", enigma.getName());
 }
 
+void testEnigmaPrint() {
+    set<string> elements;
+    elements.insert("book");
+    elements.insert("clock");
+    Enigma enigma("name", EASY_ENIGMA, 2, elements);
+    ASSERT_PRINT("name (0) 2", enigma);
+}
+
 int main() {
 
     RUN_TEST(testEnigmaCtor);
@@ -173,6 +181,7 @@ int main() {
     RUN_TEST(testEnigmaAreEqualyComplex);
     RUN_TEST(testEnigmaGetDifficulty);
     RUN_TEST(testEnigmaGetName);
+    RUN_TEST(testEnigmaPrint);
 
     return 0;
 }

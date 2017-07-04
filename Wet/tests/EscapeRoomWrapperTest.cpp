@@ -35,6 +35,9 @@ void testWrapperCtor(){
 
 void testWrapperCopyCtor(){
     EscapeRoomWrapper room((char*)"room", 50, 8, 12);
+    room.addEnigma(Enigma("enigma", HARD_ENIGMA));
+    room.addEnigma(Enigma("enigma2", EASY_ENIGMA));
+    room.addEnigma(Enigma("enigma3", MEDIUM_ENIGMA));
     EscapeRoomWrapper copied_room = room;
     //test that all the values are equal
     ASSERT_EQUALS(room.getName(), copied_room.getName());
@@ -42,15 +45,26 @@ void testWrapperCopyCtor(){
     ASSERT_EQUALS(room.level(), copied_room.level());
     ASSERT_EQUALS(room.getMaxParticipants(), copied_room.getMaxParticipants());
     ASSERT_EQUALS(room.getRate(), copied_room.getRate());
+    //test that the enigmas vector was copied successfully
+    vector<Enigma>& copied_vec = copied_room.getAllEnigmas();
+    ASSERT_EQUALS("enigma", copied_vec[0].getName());
+    ASSERT_EQUALS(HARD_ENIGMA, copied_vec[0].getDifficulty());
+    ASSERT_EQUALS("enigma2", copied_vec[1].getName());
+    ASSERT_EQUALS(EASY_ENIGMA, copied_vec[1].getDifficulty());
+    ASSERT_EQUALS("enigma3", copied_vec[2].getName());
+    ASSERT_EQUALS(MEDIUM_ENIGMA, copied_vec[2].getDifficulty());
 
     //test that the rooms are diff
     room.rate(4);
     ASSERT_NOT_EQUAL(room.getRate(), copied_room.getRate());
 
 }
-
+//TODO: self assignment
 void testWrapperAssignment(){
     EscapeRoomWrapper room((char*)"room", 50, 8, 12);
+    room.addEnigma(Enigma("enigma", HARD_ENIGMA));
+    room.addEnigma(Enigma("enigma2", EASY_ENIGMA));
+    room.addEnigma(Enigma("enigma3", MEDIUM_ENIGMA));
     EscapeRoomWrapper assigned_room((char*)"test assignment", 5);
     assigned_room = room;
     //test that all the values have been updated
@@ -59,10 +73,21 @@ void testWrapperAssignment(){
     ASSERT_EQUALS(room.level(), assigned_room.level());
     ASSERT_EQUALS(room.getMaxParticipants(), assigned_room.getMaxParticipants());
     ASSERT_EQUALS(room.getRate(), assigned_room.getRate());
+    //test that the enigmas vector was assigned successfully
+    vector<Enigma>& assigned_vec = assigned_room.getAllEnigmas();
+    ASSERT_EQUALS("enigma", assigned_vec[0].getName());
+    ASSERT_EQUALS(HARD_ENIGMA, assigned_vec[0].getDifficulty());
+    ASSERT_EQUALS("enigma2", assigned_vec[1].getName());
+    ASSERT_EQUALS(EASY_ENIGMA, assigned_vec[1].getDifficulty());
+    ASSERT_EQUALS("enigma3", assigned_vec[2].getName());
+    ASSERT_EQUALS(MEDIUM_ENIGMA, assigned_vec[2].getDifficulty());
 
     //test that the rooms are diff
     room.rate(4);
     ASSERT_NOT_EQUAL(room.getRate(), assigned_room.getRate());
+
+    //test self assignment
+    ASSERT_NO_THROW(room = room);
 }
 
 void testWrapperOperatorEqual(){
@@ -173,11 +198,85 @@ void testWrapperAddEnigma(){
 
     //test if a copy of the enigmas was inserted
     enigma.removeElement("book");
-    vector<Enigma>& vec2 = room.getAllEnigmas();
-    ASSERT_NO_THROW(vec2[0].removeElement("book"));
+    ASSERT_NO_THROW(room.getAllEnigmas()[0].removeElement("book"));
 }
 
-int main(){
+void testWrapperRemoveEnigma() {
+    EscapeRoomWrapper room((char*)"room", 50, 8, 12);
+    //test throw when room has no enigmas
+    ASSERT_THROWS(EscapeRoomNoEnigmasException,
+                  room.removeEnigma(Enigma("enigma", EASY_ENIGMA)));
+    //test throw when room has enigmas but not the requested one
+    Enigma enigma("enigma", HARD_ENIGMA);
+    room.addEnigma(enigma);
+    room.addEnigma(Enigma("enigma2", EASY_ENIGMA));
+    room.addEnigma(Enigma("enigma3", MEDIUM_ENIGMA));
+    room.addEnigma(Enigma("enigma4", MEDIUM_ENIGMA));
+    ASSERT_THROWS(EscapeRoomEnigmaNotFoundException,
+                  room.removeEnigma(Enigma("not in room", EASY_ENIGMA)));
+    //test successful removal
+    ASSERT_NO_THROW(room.removeEnigma(enigma));
+    //test that the enigma is no longer in the room
+    ASSERT_THROWS(EscapeRoomEnigmaNotFoundException, room.removeEnigma(enigma));
+    //test that the enigma is not deleted outside the room
+    ASSERT_EQUALS(HARD_ENIGMA, enigma.getDifficulty());
+
+}
+
+void testWrapperGetHardestEnigma() {
+    EscapeRoomWrapper room((char*)"room", 50, 8, 12);
+    //test throw when room has no enigmas
+    ASSERT_THROWS(EscapeRoomNoEnigmasException, room.getHardestEnigma());
+    //test when there's only one enigma
+    room.addEnigma(Enigma("easy enigma", EASY_ENIGMA));
+    ASSERT_NO_THROW(room.getHardestEnigma());
+    ASSERT_EQUALS("easy enigma", room.getHardestEnigma().getName());
+    ASSERT_EQUALS(EASY_ENIGMA, room.getHardestEnigma().getDifficulty());
+
+    //test when there are multiple enigmas
+    room.addEnigma(Enigma("medium enigma", MEDIUM_ENIGMA));
+    ASSERT_EQUALS("medium enigma", room.getHardestEnigma().getName());
+
+    //test if the first enigma in the vector returns when equally complex
+    Enigma enigma("hard enigma first", HARD_ENIGMA);
+    enigma.addElement("book");
+    room.addEnigma(enigma);
+    room.addEnigma(Enigma("hard enigma second", HARD_ENIGMA));
+    room.addEnigma(Enigma("hard enigma third", HARD_ENIGMA));
+    ASSERT_EQUALS("hard enigma first", room.getHardestEnigma().getName());
+
+    //test if the enigma stays in the room after returned
+    room.getHardestEnigma().removeElement("book");
+    ASSERT_NO_THROW(room.getHardestEnigma().removeElement("book"));
+}
+
+void testWrapperGetAllEnigmas() {
+    EscapeRoomWrapper room((char*)"room", 50, 8, 12);
+    //test returned vector when no enigmas in the room
+    vector<Enigma>& empty_vec = room.getAllEnigmas();
+    ASSERT_EQUALS(0, empty_vec.size());
+    //test returned vector when there are some enigmas
+    Enigma enigma("enigma", HARD_ENIGMA);
+    enigma.addElement("book");
+    room.addEnigma(enigma);
+    room.addEnigma(Enigma("enigma2", HARD_ENIGMA));
+    room.addEnigma(Enigma("enigma3", HARD_ENIGMA));
+    room.addEnigma(Enigma("enigma4", MEDIUM_ENIGMA));
+    room.addEnigma(Enigma("enigma5", EASY_ENIGMA));
+    vector<Enigma>& vec = room.getAllEnigmas();
+    ASSERT_EQUALS(5, vec.size());
+    ASSERT_EQUALS("enigma", vec[0].getName());
+    ASSERT_EQUALS("enigma5", vec[4].getName());
+
+    //test that the returned vector doesn't effect the enigmas in the room
+    room.getAllEnigmas()[0].removeElement("book");
+    ASSERT_NO_THROW(enigma.removeElement("book"));
+
+    //test that the enigmas still exist in the room
+    ASSERT_NO_THROW(room.getAllEnigmas()[0].removeElement("book"));
+}
+
+int main() {
 
     RUN_TEST(testWrapperCtor);
     RUN_TEST(testWrapperCopyCtor);
@@ -194,6 +293,9 @@ int main(){
     RUN_TEST(testWrapperGetMaxParticipants);
     RUN_TEST(testWrapperGetRate);
     RUN_TEST(testWrapperAddEnigma);
+    RUN_TEST(testWrapperRemoveEnigma);
+    RUN_TEST(testWrapperGetHardestEnigma);
+    RUN_TEST(testWrapperGetAllEnigmas);
 
     return 0;
 }

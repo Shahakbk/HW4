@@ -28,9 +28,9 @@ EscapeRoomWrapper::EscapeRoomWrapper(char *name, const int &level) :
         throw EscapeRoomMemoryProblemException();
     }
 }
-//TODO: add vector
+
 EscapeRoomWrapper::EscapeRoomWrapper(const EscapeRoomWrapper &room) :
-        escape_room(escapeRoomCopy(room.escape_room)) {
+        escape_room(escapeRoomCopy(room.escape_room)), enigmas(room.enigmas) {
     if (nullptr == escape_room) {
         throw EscapeRoomMemoryProblemException();
     }
@@ -71,16 +71,12 @@ Enigma EscapeRoomWrapper::getHardestEnigma() {
 }
 
 vector<Enigma>& EscapeRoomWrapper::getAllEnigmas() {
-    /*vector<Enigma> *result = new vector<Enigma>(enigmas);
-    return *result;*/
-    // a new copy will be created due to assignment operator
-    //TODO make sure
     return enigmas;
 }
 
-void EscapeRoomWrapper::addElement(const Enigma& enigma, const string& element) {
+void EscapeRoomWrapper::addElement(const Enigma& enigma, const string& element){
 
-    for (vector<Enigma>::iterator i = enigmas.begin(); i != enigmas.end(); ++i) {
+    for (vector<Enigma>::iterator i = enigmas.begin(); i != enigmas.end(); ++i){
 
         if (*i == enigma) {
             (*i).addElement(element);
@@ -94,7 +90,7 @@ void EscapeRoomWrapper::addElement(const Enigma& enigma, const string& element) 
 void EscapeRoomWrapper::removeElement(const Enigma &enigma,
                                       const string& element) {
 
-    for (vector<Enigma>::iterator i = enigmas.begin(); i != enigmas.end(); ++i) {
+    for (vector<Enigma>::iterator i = enigmas.begin(); i != enigmas.end(); ++i){
 
         if (*i == enigma) {
             try {
@@ -110,15 +106,13 @@ void EscapeRoomWrapper::removeElement(const Enigma &enigma,
 
     throw EscapeRoomEnigmaNotFoundException();
 }
-//TODO: add vector
-//TODO: check if another check for == this needed
+
 EscapeRoomWrapper &EscapeRoomWrapper::operator=(const EscapeRoomWrapper &room) {
-    EscapeRoom tmp = escapeRoomCopy(room.escape_room);
-    if (nullptr == tmp) {
-        throw EscapeRoomMemoryProblemException();
+    if (this == &room){
+        return *this;
     }
-    escapeRoomDestroy(escape_room);
-    escape_room = tmp;
+    escape_room = escapeRoomCopy(room.escape_room);
+    enigmas = room.enigmas;
     return *this;
 }
 
@@ -150,8 +144,6 @@ void EscapeRoomWrapper::rate(const int &newRate) {
 }
 
 EscapeRoomWrapper::~EscapeRoomWrapper() {
-   // delete(&enigmas);
-    //TODO ^causing SEG failed
     escapeRoomDestroy(escape_room);
 }
 

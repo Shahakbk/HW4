@@ -175,6 +175,9 @@ void testListAssignment() {
     Array testResult2 = *it;
     ASSERT_EQUALS(arr2[15], testResult2[15]);
 
+    //test self assignment
+    ASSERT_NO_THROW(arrList = arrList);
+
 }
 
 void testListIteratorBegin() {
