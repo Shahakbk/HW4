@@ -111,6 +111,7 @@ EscapeRoomWrapper &EscapeRoomWrapper::operator=(const EscapeRoomWrapper &room) {
     if (this == &room){
         return *this;
     }
+    escapeRoomDestroy(escape_room);
     escape_room = escapeRoomCopy(room.escape_room);
     enigmas = room.enigmas;
     return *this;

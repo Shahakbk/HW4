@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include "../EscapeRoomWrapper.h"
-#include "../Enigma.h"
 #include "../Exceptions.h"
 #include "mtmtest.h"
 
@@ -59,7 +58,7 @@ void testWrapperCopyCtor(){
     ASSERT_NOT_EQUAL(room.getRate(), copied_room.getRate());
 
 }
-//TODO: self assignment
+
 void testWrapperAssignment(){
     EscapeRoomWrapper room((char*)"room", 50, 8, 12);
     room.addEnigma(Enigma("enigma", HARD_ENIGMA));
@@ -157,7 +156,7 @@ void testWrapperRate(){
     //test successful rate
     room.rate(1);
     ASSERT_EQUALS(1, room.getRate());
-    //test success out of limits
+    //test throw out of limits
     ASSERT_THROWS(EscapeRoomIllegalRateException ,room.rate(0));
     ASSERT_THROWS(EscapeRoomIllegalRateException, room.rate(6));
 }
@@ -271,9 +270,39 @@ void testWrapperGetAllEnigmas() {
     //test that the returned vector doesn't effect the enigmas in the room
     room.getAllEnigmas()[0].removeElement("book");
     ASSERT_NO_THROW(enigma.removeElement("book"));
+}
 
-    //test that the enigmas still exist in the room
-    ASSERT_NO_THROW(room.getAllEnigmas()[0].removeElement("book"));
+void testWrapperAddElement() {
+    EscapeRoomWrapper room((char*)"room", 50, 8, 12);
+    //test throw when the enigma is not in the room
+    Enigma enigma("enigma", HARD_ENIGMA);
+    ASSERT_THROWS(EscapeRoomEnigmaNotFoundException,
+                  room.addElement(enigma, "book"));
+    //test successful add
+    room.addEnigma(enigma);
+    ASSERT_NO_THROW(room.addElement(enigma, "book"));
+    ASSERT_NO_THROW(room.getHardestEnigma().removeElement("book"));
+}
+
+void testWrapperRemoveElement() {
+    EscapeRoomWrapper room((char*)"room", 50, 8, 12);
+    //test throw when the enigma is not in the room
+    Enigma enigma("enigma", HARD_ENIGMA);
+    ASSERT_THROWS(EscapeRoomEnigmaNotFoundException,
+                  room.removeElement(enigma, "book"));
+    //test throw when the enigma doesn't have elements
+    room.addEnigma(enigma);
+    ASSERT_THROWS(EnigmaNoElementsException,
+                  room.removeElement(enigma, "book"));
+    //test throw when the enigma doesn't have the specific element
+    room.addElement(enigma, "map");
+    room.addElement(enigma, "lamp");
+    ASSERT_THROWS(EnigmaElementNotFoundException,
+                  room.removeElement(enigma, "book"));
+    //test successful removal
+    ASSERT_NO_THROW(room.removeElement(enigma, "lamp"));
+    ASSERT_THROWS(EnigmaElementNotFoundException,
+                  room.removeElement(enigma, "lamp"));
 }
 
 int main() {
@@ -296,6 +325,8 @@ int main() {
     RUN_TEST(testWrapperRemoveEnigma);
     RUN_TEST(testWrapperGetHardestEnigma);
     RUN_TEST(testWrapperGetAllEnigmas);
+    RUN_TEST(testWrapperAddElement);
+    RUN_TEST(testWrapperRemoveElement);
 
     return 0;
 }
