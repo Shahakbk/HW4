@@ -6,7 +6,7 @@
 
 #include "../Enigma.h"
 #include "../Exceptions.h"
-#include "mtmtest.h"
+#include "../mtmtest.h"
 
 using namespace mtm::escaperoom;
 using std::string;

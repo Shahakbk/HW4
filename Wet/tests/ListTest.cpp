@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "../List.h"
-#include "mtmtest.h"
+#include "../mtmtest.h"
 
 using namespace mtm;
 using std::string;

@@ -29,16 +29,19 @@ void testCompanyCopyCtor() {
 
     Company copied_company = company;
     //test that all the values are the same
-
+    set<EscapeRoomWrapper*> rooms = copied_company.getAllRooms();
+    ASSERT_EQUALS(3 ,rooms.size());
 
     //test that removing from the copied company doesn't effect the original one
     ASSERT_NO_THROW(copied_company.removeItem(scary_room, enigma, "book"));
     ASSERT_NO_THROW(copied_company.removeEnigma(scary_room, enigma));
     ASSERT_NO_THROW(copied_company.removeRoom(scary_room));
-//    std::cout << "printintg" <<std::endl;
 
+    ASSERT_NO_THROW(company.removeItem(scary_room, enigma, "book"));
+    ASSERT_NO_THROW(company.removeEnigma(scary_room, enigma));
+    ASSERT_NO_THROW(company.removeRoom(scary_room));
 }
-//TODO self assignment
+
 void testCompanyAssignment() {
     Company company("company", "052-123456");
     company.createRoom((char*)"room", 50, 8, 12);
@@ -52,25 +55,29 @@ void testCompanyAssignment() {
     company.addItem(scary_room, enigma, "book");
 
     Company assigned_company("assigned", "052");
-    assigned_company.createRoom((char*)"room2", 40, 4, 10);
     assigned_company.createScaryRoom((char*)"scary room2", 40, 4, 40, 4, 3);
-    assigned_company.createKidsRoom((char*)"kids room2", 40, 4, 40, 18);
-
     ScaryRoom scary_room2((char*)"scary room2", 40, 4, 40, 4, 3);
-    Enigma enigma2("enigma2", EASY_ENIGMA);
+    Enigma enigma2("enigma2", HARD_ENIGMA);
 
-    company.addEnigma(scary_room, enigma);
-    company.addItem(scary_room, enigma, "map");
+    assigned_company.addEnigma(scary_room2, enigma2);
+    assigned_company.addItem(scary_room2, enigma2, "map");
 
     assigned_company = company;
     //test all the values of the assigned company are the same as the original
+    set<EscapeRoomWrapper*> rooms = assigned_company.getAllRooms();
+    ASSERT_EQUALS(3 ,rooms.size());
 
-    //test that removing from the assigned company doesn't effect the original one
+    //test that removing from the assigned company doesn't effect the original
     ASSERT_NO_THROW(assigned_company.removeItem(scary_room, enigma, "book"));
     ASSERT_NO_THROW(assigned_company.removeEnigma(scary_room, enigma));
     ASSERT_NO_THROW(assigned_company.removeRoom(scary_room));
 
+    ASSERT_NO_THROW(company.removeItem(scary_room, enigma, "book"));
+    ASSERT_NO_THROW(company.removeEnigma(scary_room, enigma));
+    ASSERT_NO_THROW(company.removeRoom(scary_room));
+
     //test self assignment
+    ASSERT_NO_THROW(company = company);
 }
 
 void testCompanyCreateRoom() {
@@ -125,16 +132,6 @@ void testCompanyGetAllRooms() {
     ASSERT_NO_THROW(set<EscapeRoomWrapper*>(company.getAllRooms()));
     set<EscapeRoomWrapper*> rooms2 = company.getAllRooms();
     ASSERT_EQUALS(3, rooms2.size());
-
-    set<EscapeRoomWrapper *>::iterator i = rooms2.begin();
-    EscapeRoomWrapper* room = *i++;
-    ASSERT_EQUALS("room", room->getName());
-    ScaryRoom* scary_room = dynamic_cast<ScaryRoom*>(*i++);
-    ASSERT_EQUALS("scary room", scary_room->getName());
-    ASSERT_EQUALS(5, scary_room->getAgeLimit());
-    KidsRoom* kids_room = dynamic_cast<KidsRoom*>(*i);
-    ASSERT_EQUALS("kids room", kids_room->getName());
-    ASSERT_EQUALS(14, kids_room->getAgeLimit());
 }
 
 void testCompanyRemoveRoom() {
@@ -260,40 +257,33 @@ void testCompanyRemoveItem() {
 void testCompanyGetAllRoomsByType() {
     Company company("company", "052-123456");
     //test when there are no rooms in the company
-    set<EscapeRoomWrapper*> rooms = company.getAllRoomsByType(SCARY_ROOM);
+    set<EscapeRoomWrapper*> rooms = company.getAllRoomsByType(BASE_ROOM);
     ASSERT_EQUALS(0, rooms.size());
+    set<EscapeRoomWrapper*> rooms2 = company.getAllRoomsByType(SCARY_ROOM);
+    ASSERT_EQUALS(0, rooms2.size());
+    set<EscapeRoomWrapper*> rooms3 = company.getAllRoomsByType(KIDS_ROOM);
+    ASSERT_EQUALS(0, rooms3.size());
 
     company.createScaryRoom((char*)"scary room", 50, 8, 12, 5, 2);
     company.createScaryRoom((char*)"scary room2", 50, 8, 12, 5, 2);
     company.createScaryRoom((char*)"scary room3", 50, 8, 12, 5, 2);
+    company.createScaryRoom((char*)"scary room3", 50, 8, 12, 5, 2);
     company.createRoom((char*)"room", 50, 8, 12);
     company.createRoom((char*)"room2", 50, 8, 12);
-    company.createRoom((char*)"room3", 50, 8, 12);
     company.createKidsRoom((char*)"kids room", 50, 8, 12, 14);
     company.createKidsRoom((char*)"kids room2", 50, 8, 12, 14);
     company.createKidsRoom((char*)"kids room3", 50, 8, 12, 14);
 
-    set<EscapeRoomWrapper*> rooms2 = company.getAllRoomsByType(KIDS_ROOM);
-    ASSERT_EQUALS(3, rooms2.size());
-    set<EscapeRoomWrapper*>::iterator i = rooms2.begin();
-    KidsRoom* kids_room = dynamic_cast<KidsRoom*>(*i++);
-    ASSERT_EQUALS("kids room", kids_room->getName());
-    KidsRoom* kids_room2 = dynamic_cast<KidsRoom*>(*i++);
-    ASSERT_EQUALS("kids room2", kids_room2->getName());
-    KidsRoom* kids_room3 = dynamic_cast<KidsRoom*>(*i);
-    ASSERT_EQUALS("kids room3", kids_room3->getName());
+    set<EscapeRoomWrapper*> rooms4 = company.getAllRoomsByType(KIDS_ROOM);
+    ASSERT_EQUALS(3, rooms4.size());
 
     //test that only base room types returns
-    set<EscapeRoomWrapper*> rooms3 = company.getAllRoomsByType(BASE_ROOM);
-    ASSERT_EQUALS(3, rooms3.size());
-    set<EscapeRoomWrapper*>::iterator j = rooms3.begin();
-    EscapeRoomWrapper* room = *j++;
-    ASSERT_EQUALS("room", room->getName());
-    EscapeRoomWrapper* room2 = *j++;
-    ASSERT_EQUALS("room2", room2->getName());
-    EscapeRoomWrapper* room3 = *j;
-    ASSERT_EQUALS("room3", room3->getName());
+    set<EscapeRoomWrapper*> rooms5 = company.getAllRoomsByType(BASE_ROOM);
+    ASSERT_EQUALS(2, rooms5.size());
 
+    //test scary rooms returns
+    set<EscapeRoomWrapper*> rooms6 = company.getAllRoomsByType(SCARY_ROOM);
+    ASSERT_EQUALS(4, rooms6.size());
 }
 
 void testCompanyGetRoomByName() {

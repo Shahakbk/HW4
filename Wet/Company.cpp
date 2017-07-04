@@ -13,22 +13,22 @@ using std::endl;
 Company::Company(string name, string phoneNumber) : name(name),
                                                     phoneNumber(phoneNumber) {}
 
-Company::Company(const Company& company) : name(company.name), phoneNumber
-        (company.phoneNumber){
-    std::set<EscapeRoomWrapper*>::iterator it = company.rooms.begin();
-    for ( ; it != company.rooms.end(); ++it) {
-        EscapeRoomWrapper* temp = (*it)->clone();
-        rooms.insert(temp);
+Company::Company(const Company& company) : name(company.name),
+                                           phoneNumber(company.phoneNumber){
+    std::set<EscapeRoomWrapper*>::iterator i = company.rooms.begin();
+    for ( ; i != company.rooms.end(); ++i) {
+        EscapeRoomWrapper* room = (*i)->clone();
+        rooms.insert(room);
     }
 }
 
 Company::~Company() {
-    std::set<EscapeRoomWrapper*>::iterator it_target = rooms.begin();
+    std::set<EscapeRoomWrapper*>::iterator to_remove = rooms.begin();
 
-    while (it_target != rooms.end()){
-        delete(*it_target);
-        rooms.erase(it_target);
-        it_target = rooms.begin();
+    while (to_remove != rooms.end()){
+        delete(*to_remove);
+        rooms.erase(to_remove);
+        to_remove = rooms.begin();
     }
 }
 
@@ -38,19 +38,18 @@ Company& Company::operator=(const Company& company) {
     }
     name = company.name;
     phoneNumber = company.phoneNumber;
-    std::set<EscapeRoomWrapper*>::iterator it_target = rooms.begin();
 
-    while (it_target != rooms.end()){
-        removeRoom(**it_target);
-        it_target = rooms.begin();
+    std::set<EscapeRoomWrapper*>::iterator to_remove = rooms.begin();
+    while (to_remove != rooms.end()){
+        removeRoom(**to_remove);
+        to_remove = rooms.begin();
     }
 
-    std::set<EscapeRoomWrapper*>::iterator it = company.rooms.begin();
-    for ( ; it != company.rooms.end(); ++it) {
-        EscapeRoomWrapper* temp = (*it)->clone();
-        rooms.insert(temp);
+    std::set<EscapeRoomWrapper*>::iterator i = company.rooms.begin();
+    for ( ; i != company.rooms.end(); ++i) {
+        EscapeRoomWrapper* tmp = (*i)->clone();
+        rooms.insert(tmp);
     }
-
     return *this;
 }
 
