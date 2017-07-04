@@ -126,7 +126,8 @@ bool EscapeRoomWrapper::operator!=(const EscapeRoomWrapper &room) const {
 }
 
 bool EscapeRoomWrapper::operator<(const EscapeRoomWrapper &room) const {
-    return !isBiggerRoom(escape_room, room.escape_room);
+    return isBiggerRoom(room.escape_room, escape_room);
+
 }
 
 bool EscapeRoomWrapper::operator>(const EscapeRoomWrapper &room) const {
