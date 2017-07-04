@@ -87,20 +87,20 @@ public:
 };
 
 void testListCtor() {
-    //test int type list
+    //test int type it_list
     List<int> intList;
     ASSERT_EQUALS(0, intList.getSize());
-    ASSERT_EQUALS(intList.end(), intList.begin()); //if list is empty
+    ASSERT_EQUALS(intList.end(), intList.begin()); //if it_list is empty
     // iterators should be the same
 
-    //test complex type list
+    //test complex type it_list
     List<Array> arrList;
     ASSERT_EQUALS(0, intList.getSize());
     ASSERT_EQUALS(intList.end(), intList.begin());
 }
 
 void testListCopyCtor() {
-    //test int type list
+    //test int type it_list
     List<int> intList;
     intList.insert(1);
     intList.insert(2);
@@ -112,7 +112,7 @@ void testListCopyCtor() {
     ASSERT_EQUALS(intList.getSize(), copiedIntList.getSize());
     List<int>::Iterator intIt = intList.begin();
     List<int>::Iterator copiedIntIt = copiedIntList.begin();
-    //test that the iterators are not on the same list
+    //test that the iterators are not on the same it_list
     ASSERT_NOT_EQUAL(intIt, copiedIntIt);
     //test if all the elements are equal and in the same order
     ASSERT_EQUALS(*intIt, *copiedIntIt);
@@ -138,7 +138,7 @@ void testListCopyCtor() {
 }
 
 void testListDtor() {
-    //test destruction of array type list with allocations in the type
+    //test destruction of array type it_list with allocations in the type
     List<Array> arrList;
     Array arr1(5);
     Array arr2(20);
@@ -149,7 +149,7 @@ void testListDtor() {
 }
 
 void testListAssignment() {
-    //test the assignment of array type list
+    //test the assignment of array type it_list
     List<Array> arrList;
     Array arr1(5);
     Array arr2(20);
@@ -178,7 +178,7 @@ void testListAssignment() {
 
 void testListIteratorBegin() {
     List<int> list;
-    //test when list is empty begin is equal to the end
+    //test when it_list is empty begin is equal to the end
     List<int>::Iterator itBegin = list.begin();
     List<int>::Iterator itEnd = list.end();
     ASSERT_EQUALS(itEnd, itBegin);
@@ -218,16 +218,16 @@ void testListIteratorEnd() {
 void testListInsert() {
     List<int> list;
     List<int>::Iterator it = list.begin();
-    //test insert to an empty list of the list
+    //test insert to an empty it_list of the it_list
     list.insert(1, it);
     it = list.begin();
     ASSERT_EQUALS(1, *it);
-    //test insert to the start of the list
+    //test insert to the start of the it_list
     it = list.begin();
     list.insert(0, it);
     it = list.begin();
     ASSERT_EQUALS(0, *it);
-    //test insert to the middle of the list
+    //test insert to the middle of the it_list
     //also testing insert without iterator
     list.insert(3);
     list.insert(4);
@@ -242,19 +242,19 @@ void testListInsert() {
     it++;
     it++;
     ASSERT_EQUALS(1, *it);
-    //test insert to the end of the list
+    //test insert to the end of the it_list
     it = list.end();
     list.insert(6, it);
     it = list.end();
     --it;
     ASSERT_EQUALS(6, *it);
-    //test exception when iterator does not belong to the list
+    //test exception when iterator does not belong to the it_list
     List<int> list2;
     list2.insert(10);
     list2.insert(11);
     list2.insert(12);
 
-    //not the same list
+    //not the same it_list
     it = list.begin();
     it++;
 
@@ -264,7 +264,7 @@ void testListInsert() {
 
 void testListRemove() {
     List<Array> arrList;
-    //test exception when trying to remove from empty list
+    //test exception when trying to remove from empty it_list
     List<Array>::Iterator it = arrList.begin();
     ASSERT_THROWS(ElementNotFound, arrList.remove(it));
 
@@ -282,7 +282,7 @@ void testListRemove() {
     it = arrList.end();
     ASSERT_THROWS(ElementNotFound, arrList.remove(it));
 
-    //test exception when iterator does not belong to the list
+    //test exception when iterator does not belong to the it_list
     List<Array> arrList2;
     arrList.insert(arr1);
     arrList.insert(arr2);
@@ -290,7 +290,7 @@ void testListRemove() {
     arrList.insert(arr4);
     arrList.insert(arr5);
 
-    //not the same list
+    //not the same it_list
     it = arrList.begin();
 
     ASSERT_THROWS(ElementNotFound, arrList2.remove(it));
@@ -337,11 +337,11 @@ void testListOperatorEqual() {
     intList2.insert(1);
     intList2.insert(2);
 
-    //test same list equals
+    //test same it_list equals
     ASSERT_TRUE(intList == intList);
     //test diff lists with same elements and order
     ASSERT_TRUE(intList == intList2);
-    //test false when on list has more elements than the other
+    //test false when on it_list has more elements than the other
     intList2.insert(3);
     ASSERT_FALSE(intList == intList2);
 
@@ -415,7 +415,7 @@ void testListFind() {
 }
 
 void testListSort() {
-    //test sort on int type list
+    //test sort on int type it_list
     List<int> intList;
     intList.insert(5);
     intList.insert(4);
@@ -436,7 +436,7 @@ void testListSort() {
     intIt++;
     ASSERT_EQUALS(5, *intIt);
 
-    //test sort on string type list
+    //test sort on string type it_list
     List<string> stringList;
     stringList.insert("shahak");
     stringList.insert("reznik");
@@ -489,7 +489,7 @@ void testListGetSize() {
 
     //test get size when empty
     ASSERT_EQUALS(0, intList.getSize());
-    //test get size when list has elements
+    //test get size when it_list has elements
     intList.insert(0);
     intList.insert(1);
     intList.insert(2);
@@ -533,7 +533,7 @@ void testIteratorDereference() {
     List<int>::Iterator it = list.begin();
     ASSERT_EQUALS(1, *it);
 
-    //test exception when iterator is on the end of the list
+    //test exception when iterator is on the end of the it_list
     it = list.end();
     ASSERT_THROWS(ElementNotFound, *it);
 
@@ -590,14 +590,14 @@ void testIteratorEqual() {
 
     //test equal when the same iterator
     ASSERT_TRUE(it == it);
-    //test not equal when not on the same list
+    //test not equal when not on the same it_list
     ASSERT_FALSE(it == it2);
-    //test diff iterators on same list and element
+    //test diff iterators on same it_list and element
     ASSERT_TRUE(it == itSameList);
-    //test diff iterators on same list and diff elements
+    //test diff iterators on same it_list and diff elements
     itSameList++;
     ASSERT_FALSE(it == itSameList);
-    //test diff iterators on same list and both end of list
+    //test diff iterators on same it_list and both end of it_list
     it = list.end();
     itSameList = list.end();
     ASSERT_TRUE(it == itSameList);
@@ -634,7 +634,7 @@ void testIteratorNotEqual() {
 
 int main() {
 
-    //testing the list funcs
+    //testing the it_list funcs
     RUN_TEST(testListCtor);
     RUN_TEST(testListCopyCtor);
     RUN_TEST(testListDtor);

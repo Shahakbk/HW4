@@ -1,7 +1,3 @@
-//
-// Created by Shahak on 04/07/2017.
-//
-
 #ifndef HW4_DRY_H
 #define HW4_DRY_H
 

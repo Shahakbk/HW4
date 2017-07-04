@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Werror -pedantic-errors -DNDEBUG")
 
 set(SOURCE_FILES Wet/Exceptions.h Wet/Enigma.cpp Wet/Enigma.h
         Wet/EscapeRoomWrapper.cpp Wet/EscapeRoomWrapper.h Wet/EscapeRoom.c
-        Wet/List.h Wet/mtmtest.h Wet/ScaryRoom.cpp Wet/ScaryRoom.h
+        Wet/list.h Wet/mtmtest.h Wet/ScaryRoom.cpp Wet/ScaryRoom.h
         Wet/KidsRoom.cpp Wet/KidsRoom.h Wet/Company.cpp Wet/Company.h
-        Wet/tests/CompanyTest.cpp)
+        Wet/tests/list_test.cpp)
 add_executable(HW4 ${SOURCE_FILES})
