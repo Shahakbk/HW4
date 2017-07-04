@@ -142,6 +142,11 @@ namespace mtm{
             //
             int getMaxParticipants() const;
 
+            /**
+             * returns a ptr to the room according to its type
+             */
+            virtual EscapeRoomWrapper* clone() const;
+
         protected:
 
             /**

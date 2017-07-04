@@ -177,3 +177,7 @@ std::ostream& mtm::escaperoom::operator<<(std::ostream& output,
     room.print(output);
     return output;
 }
+
+EscapeRoomWrapper* EscapeRoomWrapper::clone() const{
+    return new EscapeRoomWrapper(*this);
+}

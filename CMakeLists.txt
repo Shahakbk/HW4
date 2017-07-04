@@ -3,10 +3,11 @@ project(HW4)
 
 set(CMAKE_CXX_STANDARD 11)
 
-SET(GXX_COVERAGE_COMPILE_FLAGS "-Wall -pedantic-errors -Werror -DNDEBUG")
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GXX_COVERAGE_COMPILE_FLAGS}" )
+set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Werror -pedantic-errors -DNDEBUG")
 
-set(SOURCE_FILES Wet/Enigma.cpp Wet/EscapeRoomWrapper.cpp Wet/EscapeRoom.c
-        Wet/ScaryRoom.cpp Wet/ScaryRoom.h Wet/tests/ScaryRoomTest.cpp)
+set(SOURCE_FILES Wet/Exceptions.h Wet/Enigma.cpp Wet/Enigma.h
+        Wet/EscapeRoomWrapper.cpp Wet/EscapeRoomWrapper.h Wet/EscapeRoom.c
+        Wet/List.h Wet/mtmtest.h Wet/ScaryRoom.cpp Wet/ScaryRoom.h
+        Wet/KidsRoom.cpp Wet/KidsRoom.h Wet/Company.cpp Wet/Company.h
+        Wet/tests/CompanyTest.cpp)
 add_executable(HW4 ${SOURCE_FILES})
-

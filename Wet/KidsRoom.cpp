@@ -29,3 +29,7 @@ void KidsRoom::print(std::ostream &output) const {
            << "/" << this->level() << "/" << this->getMaxParticipants() << "/" <<
            this->getAgeLimit() << ")";
 }
+
+EscapeRoomWrapper* KidsRoom::clone() const{
+    return new KidsRoom(*this);
+}

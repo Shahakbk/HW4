@@ -15,39 +15,57 @@ Company::Company(string name, string phoneNumber) : name(name),
 
 Company::Company(const Company &company) :
         name(company.name),
-        phoneNumber(company.phoneNumber),
-        rooms(company.rooms) {}
-//TODO check if set / vector duplicate this way
+        phoneNumber(company.phoneNumber) {
+    copyRooms(company.rooms);
+}
 
 Company::~Company() {
-    for (set<EscapeRoomWrapper *>::iterator i = rooms.begin();
+    for (set<EscapeRoomWrapper*>::iterator i = rooms.begin();
          i != rooms.end(); ++i) {
-        delete(*i);
+        removeRoom(**i);
     }
-    //  delete(&rooms);
-    // ^causing SEG fault
 }
 
 Company &Company::operator=(const Company &company) {
     if (this == &company) {
         return *this;
     }
-
-    delete (&rooms);
-    rooms = company.rooms;
-    //TODO double check^
     name = company.name;
     phoneNumber = company.phoneNumber;
+
+    std::set<EscapeRoomWrapper*>::iterator to_remove = rooms.begin();
+    while (to_remove != rooms.end()){
+        removeRoom(**to_remove);
+        to_remove = rooms.begin();
+    }
+
+    for (std::set<EscapeRoomWrapper*>::iterator i = company.rooms.begin();
+         i != company.rooms.end(); ++i) {
+        EscapeRoomWrapper *temp = (*i)->clone();
+        rooms.insert(temp);
+    }
     return *this;
+}
+
+void Company::copyRooms(set<EscapeRoomWrapper*> rooms){
+    for (set<EscapeRoomWrapper*>::iterator i = rooms.begin();
+            i != rooms.end(); i++){
+        EscapeRoomWrapper* room = *i;
+        removeRoom(*room);
+    }
+    rooms.clear();
+    for(set<EscapeRoomWrapper*>::iterator i = rooms.begin();
+            i != rooms.end(); i++){
+        EscapeRoomWrapper *room = (*i)->clone();
+        this->rooms.insert(room);
+    }
 }
 
 void Company::createRoom(char *name, const int &escapeTime, const int &level,
                          const int &maxParticipants) {
     try {
-/*        EscapeRoomWrapper *newRoom = new EscapeRoomWrapper(name, escapeTime,
-                                                           level,
-                                                           maxParticipants);*/
-        rooms.insert(new EscapeRoomWrapper(name, escapeTime, level, maxParticipants));
+        rooms.insert(new EscapeRoomWrapper(name, escapeTime, level,
+                                           maxParticipants));
     } catch (EscapeRoomMemoryProblemException) {
         throw CompanyMemoryProblemException();
     }
@@ -58,9 +76,6 @@ void Company::createScaryRoom(char *name, const int &escapeTime,
                               const int &ageLimit,
                               const int &numOfScaryEnigmas) {
     try {
-/*        ScaryRoom scaryRoom = ScaryRoom(name, escapeTime, level,
-                                        maxParticipants, ageLimit,
-                                        numOfScaryEnigmas);*/
         rooms.insert(new ScaryRoom(name, escapeTime, level, maxParticipants,
                                    ageLimit, numOfScaryEnigmas));
     } catch (EscapeRoomMemoryProblemException) {
@@ -72,8 +87,6 @@ void Company::createKidsRoom(char *name, const int &escapeTime,
                              const int &level, const int &maxParticipants,
                              const int &ageLimit) {
     try {
-/*        KidsRoom kidsRoom = KidsRoom(name, escapeTime, level,
-                                     maxParticipants, ageLimit);*/
         //TODO double check
         rooms.insert(new KidsRoom(name, escapeTime, level, maxParticipants,
                                   ageLimit));
@@ -183,7 +196,6 @@ void Company::removeItem(const EscapeRoomWrapper& room,
 
 set<EscapeRoomWrapper*> Company::getAllRoomsByType(RoomType type) const {
 
-    //set<EscapeRoomWrapper*> *newSet = new set<EscapeRoomWrapper*>();
     set<EscapeRoomWrapper*> newSet = set<EscapeRoomWrapper*>();
     //TODO make sure
     for (set<EscapeRoomWrapper *>::iterator i = rooms.begin(); i != rooms.end(); ++i) {
@@ -195,30 +207,22 @@ set<EscapeRoomWrapper*> Company::getAllRoomsByType(RoomType type) const {
                 newSet.insert(*i);
                 continue;
             }
-        }
-
-        if (type == SCARY_ROOM) {
+        } else if (type == SCARY_ROOM) {
             ScaryRoom* ptrRoom = dynamic_cast<ScaryRoom*>(*i);
             if (nullptr != ptrRoom) {
                 //(*newSet).insert(*i);
                 newSet.insert(*i);
                 continue;
             }
-        }
-
-        // not using else because a type may be added (?)
-        if (type == BASE_ROOM) {
-            EscapeRoomWrapper* ptrRoom = dynamic_cast<EscapeRoomWrapper*>(*i);
-            //TODO make sure this ^ doesn't take scary & kids as well
-            if (nullptr != ptrRoom) {
-                //(*newSet).insert(*i);
+        }else if (type == BASE_ROOM) {
+            ScaryRoom* ptrRoom = dynamic_cast<ScaryRoom*>(*i);
+            KidsRoom* ptrRoom2 = dynamic_cast<KidsRoom*>(*i);
+            if (nullptr == ptrRoom && nullptr == ptrRoom2) {
                 newSet.insert(*i);
                 continue;
             }
         }
     }
-
-    //return *newSet;
     return newSet;
 }
 
@@ -242,11 +246,10 @@ bool mtm::escaperoom::operator==(const Company &a, const Company &b) {
 
 std::ostream& mtm::escaperoom::operator<<(std::ostream& output,
                                           const Company& company) {
-    cout << company.name << " : " << company.phoneNumber << endl;
-    for (set<EscapeRoomWrapper *>::iterator i = company.getAllRooms().begin();
-         i != company.getAllRooms().end(); ++i) {
-        cout << *i << endl;
+    output << company.name << " : " << company.phoneNumber << endl;
+    for (set<EscapeRoomWrapper *>::iterator i = company.rooms.begin();
+         i != company.rooms.end(); ++i) {
+        output << **i << endl;
     }
-
     return output;
 }

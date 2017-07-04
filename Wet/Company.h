@@ -152,6 +152,8 @@ namespace mtm{
 
             //Destructor
             ~Company();
+
+            void copyRooms(set<EscapeRoomWrapper*> rooms);
         };
 
         std::ostream& operator<<(std::ostream& output, const Company& company);

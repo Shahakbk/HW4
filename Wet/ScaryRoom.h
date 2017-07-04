@@ -60,6 +60,11 @@ namespace mtm {
              * a destructor for scary room to override the virtual base destructor
              */
             ~ScaryRoom() override = default;
+
+            /**
+             * returns a ptr to the room according to its type
+             */
+            EscapeRoomWrapper* clone() const override;
         };
     }
 }

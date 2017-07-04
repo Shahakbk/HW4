@@ -12,7 +12,7 @@ using namespace mtm::escaperoom;
 using std::string;
 using std::cout;
 using std::endl;
-
+//TODO delete if not necessary
 void testEnigmaCtor() {
     set<string> elements;
     elements.insert("book");

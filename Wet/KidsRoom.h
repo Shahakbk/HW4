@@ -51,6 +51,11 @@ namespace mtm {
              * a destructor for kids room to override the virtual base destructor
              */
             ~KidsRoom() override = default;
+
+            /**
+             * returns a ptr to the room according to its type
+             */
+            EscapeRoomWrapper* clone() const override;
         };
     }
 }

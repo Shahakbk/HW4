@@ -34,3 +34,7 @@ void ScaryRoom::print(std::ostream &output) const {
            << "/" << this->level() << "/" << this->getMaxParticipants()
            << "/" << this->getAgeLimit() << ")";
 }
+
+EscapeRoomWrapper* ScaryRoom::clone() const {
+    return new ScaryRoom(*this);
+}
